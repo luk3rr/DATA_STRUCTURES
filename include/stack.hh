@@ -5,13 +5,13 @@
 
 #include "stack_excpt.hh"
 
-#define MAX_SIZE 1000
+#define STACK_MAX_SIZE 1000
 
 template <typename typeT>
 class Stack {
     private:
         int _top;
-        typeT _v[MAX_SIZE];
+        typeT _v[STACK_MAX_SIZE];
 
     public:
         Stack();
@@ -59,15 +59,17 @@ Stack<typeT>::Stack() {
 
 template<typename typeT>
 void Stack<typeT>::push(typeT item) {
+    if (this->_top == STACK_MAX_SIZE)
+        throw stkexcpt::StackOverflow();
+
     this->_top++;
     this->_v[this->_top] = item;
 }
 
 template<typename typeT>
 typeT Stack<typeT>::peek() {
-    if (this->isEmpty()) {
+    if (this->isEmpty())
         throw stkexcpt::StackIsEmpty();
-    }
 
     return this->_v[this->_top];
 }
@@ -80,9 +82,8 @@ bool Stack<typeT>::isEmpty() {
 
 template<typename typeT>
 typeT Stack<typeT>::pop() {
-    if (this->isEmpty()) {
+    if (this->isEmpty())
         throw stkexcpt::StackIsEmpty();
-    }
 
     this->_top--;
     return this->_v[this->_top + 1];

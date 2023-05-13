@@ -35,7 +35,7 @@ TEST_CASE("Remover elemento") {
     }
 }
 
-TEST_CASE("Primeiro e último elemento") {
+TEST_CASE("Pegar primeiro e último elemento") {
     dlkd::List<int> list;
 
     list.push_back(1);
@@ -47,7 +47,7 @@ TEST_CASE("Primeiro e último elemento") {
     CHECK(list.back() == 4);
 }
 
-TEST_CASE("Limpar lista e excessões") {
+TEST_CASE("Lançamento de exceções para lista vazia") {
     dlkd::List<int> list;
 
     list.push_back(1);

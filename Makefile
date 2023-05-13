@@ -24,11 +24,14 @@ PROGRAM_OBJS =	$(OBJ_DIR)/list_doubly_linked.o \
 				$(OBJ_DIR)/queue_excpt.o \
 				$(OBJ_DIR)/stack.o \
 				$(OBJ_DIR)/stack_excpt.o \
+				$(OBJ_DIR)/queue_singly_linked.o \
 				$(OBJ_DIR)/binary_tree.o \
 				$(OBJ_DIR)/utils.o \
-				$(OBJ_DIR)/node_doubly_linked.o
+				$(OBJ_DIR)/node_doubly_linked.o \
+				$(OBJ_DIR)/node_singly_linked.o
 
 TEST_OBJS = $(OBJ_DIR)/list_doubly_linked_test.o \
+			$(OBJ_DIR)/queue_singly_linked_test.o \
 			$(OBJ_DIR)/stack_test.o \
 			$(OBJ_DIR)/queue_test.o \
 			$(OBJ_DIR)/main_doctest.o
@@ -57,7 +60,7 @@ $(OBJ_DIR)/%.o: $(TST_DIR)/%.cc
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
 	$(CC) -c $(CFLAGS) $< -I $(INC_DIR) -o $@
 
-valgrind: tests
+valgrind: tests build
 	valgrind --leak-check=full $(BIN_DIR)/$(TEST_NAME) > /dev/null
 	valgrind --leak-check=full $(BIN_DIR)/$(PROGRAM_NAME)
 

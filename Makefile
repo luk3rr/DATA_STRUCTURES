@@ -22,6 +22,8 @@ PROGRAM_OBJS =	$(OBJ_DIR)/list_doubly_linked.o \
 				$(OBJ_DIR)/list_excpt.o \
 				$(OBJ_DIR)/queue.o \
 				$(OBJ_DIR)/queue_excpt.o \
+				$(OBJ_DIR)/vector.o \
+				$(OBJ_DIR)/vector_excpt.o \
 				$(OBJ_DIR)/stack.o \
 				$(OBJ_DIR)/stack_excpt.o \
 				$(OBJ_DIR)/queue_singly_linked.o \
@@ -36,6 +38,7 @@ TEST_OBJS = $(OBJ_DIR)/list_doubly_linked_test.o \
 			$(OBJ_DIR)/stack_singly_linked_test.o \
 			$(OBJ_DIR)/stack_test.o \
 			$(OBJ_DIR)/queue_test.o \
+			$(OBJ_DIR)/vector_test.o \
 			$(OBJ_DIR)/main_doctest.o
 
 # CASES

@@ -1,10 +1,16 @@
+/*
+* Filename: stack_singly_linked_test.cc
+* Created on: May 14, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #include <ctime>
 #include <cstdlib>
 #include <random>
 
 #include "doctest.h"
-#include "stack_singly_linked.hh"
-#include "stack_excpt.hh"
+#include "stack_singly_linked.h"
+#include "stack_excpt.h"
 
 #define STACK_MAX_LENGTH_TEST 10000
 #define STACK_MIN_LENGTH_TEST 10
@@ -20,25 +26,25 @@ TEST_CASE("Empilha e desempilha") {
     // Empilha os valores e os armazena em um array auxiliar para a verificação posterior
     for (int i = 0; i < stackRandomLenght; i++) {
         randomNumber = std::rand();
-        pilha.push(randomNumber);
+        pilha.Push(randomNumber);
         checkArray[i] = randomNumber;
     }
 
-    CHECK(!pilha.isEmpty());
+    CHECK(!pilha.IsEmpty());
 
     bool correct = true;
 
     // Desempilha os valores e verifica se foram empilhados na ordem correta
     int i = stackRandomLenght - 1;
-    while (!pilha.isEmpty()) {
-        if (checkArray[i] != pilha.pop()) {
+    while (!pilha.IsEmpty()) {
+        if (checkArray[i] != pilha.Pop()) {
             correct = false;
             break;
         }
         i--;
     }
 
-    CHECK(pilha.isEmpty());
+    CHECK(pilha.IsEmpty());
     CHECK(correct);
 }
 
@@ -47,20 +53,20 @@ TEST_CASE("Lançamento de exceções") {
     slkd::Stack<float> pilha;
 
     SUBCASE("Desempilhar pilha vazia") {
-        CHECK_THROWS_AS(pilha.pop(), stkexcpt::StackIsEmpty);
+        CHECK_THROWS_AS(pilha.Pop(), stkexcpt::StackIsEmpty);
     }
 
     SUBCASE("Espiar elemento no topo de uma pilha vazia") {
-        CHECK_THROWS_AS(pilha.peek(), stkexcpt::StackIsEmpty);
+        CHECK_THROWS_AS(pilha.Peek(), stkexcpt::StackIsEmpty);
     }
 }
 
 TEST_CASE("Espiar elemento no topo") {
     slkd::Stack<int> pilha;
-    pilha.push(1);
-    pilha.push(4);
-    pilha.push(5);
-    pilha.push(7);
-    pilha.pop();
-    CHECK(pilha.peek() == 5);
+    pilha.Push(1);
+    pilha.Push(4);
+    pilha.Push(5);
+    pilha.Push(7);
+    pilha.Pop();
+    CHECK(pilha.Peek() == 5);
 }

@@ -1,23 +1,29 @@
+/*
+* Filename: stack_singly_linked.h
+* Created on: May 14, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #ifndef STACK_SINGLY_LINKED_H_
 #define STACK_SINGLY_LINKED_H_
 
-#include "node_singly_linked.hh"
-#include "stack_excpt.hh"
+#include "node_singly_linked.h"
+#include "stack_excpt.h"
 
 // Singly linked namespace
 namespace slkd {
     template <typename typeT>
     class Stack {
         private:
-            Node<typeT> *_bottom;
-            Node<typeT> *_top;
-            int _size;
+            Node<typeT> *m_bottom;
+            Node<typeT> *m_top;
+            int m_size;
 
             /**
             @brief Deleta o primeiro nó da pilha
             @throw queexcpt::StackIsEmpty Caso a pilha esteja vazia
             */
-            void deleteTop();
+            void DeleteTop();
 
         public:
             Stack();
@@ -28,107 +34,107 @@ namespace slkd {
             @brief Quantidade de elementos na pilha
             @return A quantidade de elementos na pilha (tamanho)
             */
-            int getLenght();
+            int Size();
 
             /**
             @brief Retorna o elemento no topo da pilha sem desempilha-lo
             @return Chave no topo da pilha
             */
-            typeT peek();
+            typeT Peek();
 
             /**
             @brief Empilha um elemento
             @param element Elemento que será enfileirado
             */
-            void push(typeT element);
+            void Push(typeT element);
 
             /**
             @brief Verifica se a pilha está vazia
             @return True se a pilha estiver vazia, False caso contrário
             */
-            bool isEmpty();
+            bool IsEmpty();
 
             /**
             @brief Desempilha um elemento
             @return Primeira elemento da pilha
             @throw queexcpt::StackIsEmpty Caso a pilha esteja vazia
             */
-            typeT pop();
+            typeT Pop();
 
             /**
             @brief Remove todos os elementos da pilha
             */
-            void clean();
+            void Clear();
     };
 
     template <typename typeT>
     Stack<typeT>::Stack() {
-        this->_size = 0;
-        this->_bottom = this->_top = nullptr;
+        this->m_size = 0;
+        this->m_bottom = this->m_top = nullptr;
     }
 
     template <typename typeT>
     Stack<typeT>::~Stack() {
-        this->clean();
+        this->Clear();
     }
 
     template <typename typeT>
-    int Stack<typeT>::getLenght() {
-        return this->_size;
+    int Stack<typeT>::Size() {
+        return this->m_size;
     }
 
     template <typename typeT>
-    typeT Stack<typeT>::peek() {
-        if (this->isEmpty())
+    typeT Stack<typeT>::Peek() {
+        if (this->IsEmpty())
             throw stkexcpt::StackIsEmpty();
 
-        return this->_top->_key;
+        return this->m_top->m_key;
     }
 
     template <typename typeT>
-    bool Stack<typeT>::isEmpty() {
-        if (this->_size == 0) return true;
+    bool Stack<typeT>::IsEmpty() {
+        if (this->m_size == 0) return true;
         return false;
     }
 
     template <typename typeT>
-    void Stack<typeT>::push(typeT element) {
-        if (this->isEmpty()) {
-            this->_bottom = this->_top = new Node<typeT>(element);
+    void Stack<typeT>::Push(typeT element) {
+        if (this->IsEmpty()) {
+            this->m_bottom = this->m_top = new Node<typeT>(element);
         }
         else {
             Node<typeT> *aux = new Node<typeT>(element);
-            aux->_next = this->_top;
-            this->_top = aux;
+            aux->m_next = this->m_top;
+            this->m_top = aux;
         }
-        this->_size++;
+        this->m_size++;
     }
 
     template <typename typeT>
-    void Stack<typeT>::deleteTop() {
-        if (this->isEmpty())
+    void Stack<typeT>::DeleteTop() {
+        if (this->IsEmpty())
             throw stkexcpt::StackIsEmpty();
 
-        Node<typeT> *toDelete = this->_top;
-        this->_top = this->_top->_next;
+        Node<typeT> *toDelete = this->m_top;
+        this->m_top = this->m_top->m_next;
         delete toDelete;
-        this->_size--;
+        this->m_size--;
     }
 
     template <typename typeT>
-    typeT Stack<typeT>::pop() {
-        if (this->isEmpty())
+    typeT Stack<typeT>::Pop() {
+        if (this->IsEmpty())
             throw stkexcpt::StackIsEmpty();
 
-        typeT element = this->_top->_key;
-        this->deleteTop();
+        typeT element = this->m_top->m_key;
+        this->DeleteTop();
         return element;
     }
 
     template <typename typeT>
-    void Stack<typeT>::clean() {
-        while (!this->isEmpty()) {
-            this->deleteTop();
+    void Stack<typeT>::Clear() {
+        while (!this->IsEmpty()) {
+            this->DeleteTop();
         }
     }
 }

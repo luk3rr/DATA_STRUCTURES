@@ -1,10 +1,16 @@
+/*
+* Filename: stack_test.cc
+* Created on: May 14, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #include <ctime>
 #include <cstdlib>
 #include <random>
 
 #include "doctest.h"
-#include "stack.hh"
-#include "stack_excpt.hh"
+#include "stack.h"
+#include "stack_excpt.h"
 
 #define STACK_MIN_LENGTH_TEST 10
 
@@ -19,25 +25,25 @@ TEST_CASE("Empilha e desempilha") {
     // Empilha os valores e os armazena em um array auxiliar para a verificação posterior
     for (int i = 0; i < stackRandomLenght; i++) {
         randomNumber = std::rand();
-        pilha.push(randomNumber);
+        pilha.Push(randomNumber);
         checkArray[i] = randomNumber;
     }
 
-    CHECK(!pilha.isEmpty());
+    CHECK(!pilha.IsEmpty());
 
     bool correct = true;
 
     // Desempilha os valores e verifica se foram empilhados na ordem correta
     int i = stackRandomLenght - 1;
-    while (!pilha.isEmpty()) {
-        if (checkArray[i] != pilha.pop()) {
+    while (!pilha.IsEmpty()) {
+        if (checkArray[i] != pilha.Pop()) {
             correct = false;
             break;
         }
         i--;
     }
 
-    CHECK(pilha.isEmpty());
+    CHECK(pilha.IsEmpty());
     CHECK(correct);
 }
 
@@ -46,13 +52,13 @@ TEST_CASE("Lançamento de exceções") {
     Stack<float> pilha;
 
     SUBCASE("Desempilhar pilha vazia") {
-        CHECK_THROWS_AS(pilha.pop(), stkexcpt::StackIsEmpty);
+        CHECK_THROWS_AS(pilha.Pop(), stkexcpt::StackIsEmpty);
     }
 
     SUBCASE("Exceder limite da pilha") {
         for (int i = 0; i < STACK_MAX_SIZE; i++) {
-            pilha.push(i);
+            pilha.Push(i);
         }
-        CHECK_THROWS_AS(pilha.push(333), stkexcpt::StackOverflow);
+        CHECK_THROWS_AS(pilha.Push(333), stkexcpt::StackOverflow);
     }
 }

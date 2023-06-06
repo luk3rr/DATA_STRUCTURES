@@ -1,4 +1,10 @@
-#include "queue_excpt.hh"
+/*
+* Filename: queue_excpt.cc
+* Created on: May 13, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
+#include "queue_excpt.h"
 
 const char* queexcpt::QueueOverflow::what() const throw() {
     return "ERRO: Limite da fila excedido";

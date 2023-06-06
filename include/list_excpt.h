@@ -1,5 +1,11 @@
-#ifndef LISTEXCPT_H_
-#define LISTEXCPT_H_
+/*
+* Filename: list_excpt.h
+* Created on: May 13, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
+#ifndef LIST_EXCPT_H_
+#define LIST_EXCPT_H_
 
 #include <exception>
 #include <string>
@@ -10,6 +16,6 @@ namespace lstexcpt {
           public:
             const char *what() const throw();
     };
-    } // namespace lstexcpt
+} // namespace lstexcpt
 
-#endif // LISTEXCPT_H_
+#endif // LIST_EXCPT_H_

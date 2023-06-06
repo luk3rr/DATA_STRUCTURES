@@ -1,10 +1,16 @@
+/*
+* Filename: queue_singly_linked_test.cc
+* Created on: May 13, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #include <ctime>
 #include <cstdlib>
 #include <random>
 
 #include "doctest.h"
-#include "queue_excpt.hh"
-#include "queue_singly_linked.hh"
+#include "queue_excpt.h"
+#include "queue_singly_linked.h"
 
 #define QUEUE_MAX_LENGTH_TEST 10000
 #define QUEUE_MIN_LENGTH_TEST 10
@@ -17,28 +23,28 @@ TEST_CASE("Enfileira e desenfileira") {
     float checkArray[queueRandomLenght];
     int randomNumber;
 
-    CHECK(queue.isEmpty());
+    CHECK(queue.IsEmpty());
 
     // Enfileira os valores e os armazena em um array auxiliar para a verificação posterior
     for (int i = 0; i < queueRandomLenght; i++) {
         randomNumber = std::rand();
-        queue.enqueue(randomNumber);
+        queue.Enqueue(randomNumber);
         checkArray[i] = randomNumber;
     }
 
-    CHECK(!queue.isEmpty());
+    CHECK(!queue.IsEmpty());
 
     bool correct = true;
 
     // Desenfileira os valores e verifica se foram enfileirados na ordem correta
     for (int i = 0; i < queueRandomLenght; i++) {
-        if (checkArray[i] != queue.dequeue()) {
+        if (checkArray[i] != queue.Dequeue()) {
             correct = false;
             break;
         }
     }
 
-    CHECK(queue.isEmpty());
+    CHECK(queue.IsEmpty());
     CHECK(correct);
 }
 
@@ -46,6 +52,6 @@ TEST_CASE("Lançamento de exceções") {
     slkd::Queue<float> queue;
 
     SUBCASE("Desenfileirar fila vazia") {
-        CHECK_THROWS_AS(queue.dequeue(), queexcpt::QueueIsEmpty);
+        CHECK_THROWS_AS(queue.Dequeue(), queexcpt::QueueIsEmpty);
     }
 }

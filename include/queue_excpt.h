@@ -1,3 +1,9 @@
+/*
+* Filename: queue_excpt.h
+* Created on: May 13, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #ifndef QUEUE_EXCPT_H_
 #define QUEUE_EXCPT_H_
 

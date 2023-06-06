@@ -24,7 +24,7 @@ TEST_CASE("Acessar um elemento do vector") {
         vector.PushBack(i);
     }
 
-    REQUIRE(vector.GetSize() == VECTOR_START_SIZE);
+    REQUIRE(vector.Size() == VECTOR_START_SIZE);
     CHECK(vector[10] == 10);
 }
 

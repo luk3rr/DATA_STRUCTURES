@@ -7,7 +7,7 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include "utils.hh"
+#include "utils.h"
 #include "vector_excpt.h"
 
 #define VECTOR_START_SIZE 100
@@ -42,7 +42,7 @@ class Vector {
         @brief Pega o tamanho atual do vector
         @return Inteiro que representa o tamanho do vector
         */
-        unsigned int GetSize();
+        unsigned int Size();
 
         /**
         @brief Pega o tamanho máximo atual (quando esse limite for alcança o vector é realocado para comportar mais elementos)
@@ -101,7 +101,7 @@ typeT &Vector<typeT>::operator[](unsigned int index) {
 }
 
 template<typename typeT>
-unsigned int Vector<typeT>::GetSize() {
+unsigned int Vector<typeT>::Size() {
     return this->m_size;
 }
 
@@ -117,7 +117,7 @@ bool Vector<typeT>::IsEmpty() {
 
 template<typename typeT>
 void Vector<typeT>::Swap(unsigned int index1, unsigned int index2) {
-    if ((unsigned int)utils::max(index1, index2) > this->m_size)
+    if ((unsigned int)utils::Max(index1, index2) > this->m_size)
         throw vecexcpt::InvalidIndex();
 
     typeT aux = this->m_elements[index1];

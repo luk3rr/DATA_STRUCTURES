@@ -1,3 +1,9 @@
+/*
+* Filename: stack_excpt.h
+* Created on: May 13, 2023
+* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*/
+
 #ifndef STACK_EXCPT_H_
 #define STACK_EXCPT_H_
 

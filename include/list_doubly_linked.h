@@ -92,6 +92,58 @@ namespace dlkd {
             @brief Percorre a lista e imprime todas as chaves
             */
             void Print();
+
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type = std::ptrdiff_t;
+            using value_type = typeT;
+            using pointer = dlkd::Node<typeT> *;
+            using reference = dlkd::Node<typeT> &;
+
+            typedef struct Iterator {
+                public:
+                    Iterator(pointer ptr) : m_ptr(ptr) { }
+
+                    Iterator() { }
+
+                    reference operator*() const {
+                        return *m_ptr;
+                    }
+
+                    pointer operator->() {
+                        return m_ptr;
+                    }
+
+                    Iterator &operator++() {
+                        m_ptr = m_ptr->m_right;
+                        return *this;
+                    }
+
+                    Iterator operator++(value_type) {
+                        Iterator tmp = *this;
+                        ++(*this);
+                        return tmp;
+                    }
+
+                    friend bool operator==(const Iterator &a, const Iterator &b) {
+                        return a.m_ptr == b.m_ptr;
+                    };
+
+                    friend bool operator!=(const Iterator &a, const Iterator &b) {
+                        return a.m_ptr != b.m_ptr;
+                    };
+
+                private:
+                    pointer m_ptr;
+
+            } Iterator;
+
+        Iterator begin() {
+            return Iterator(this->m_head);
+        }
+
+        Iterator end() {
+            return Iterator(this->m_tail);
+        }
     };
 
     template<typename typeT>
@@ -224,6 +276,7 @@ namespace dlkd {
             nodeAux = nodeAux->m_right;
         }
     }
+
 }
 
 #endif // LIST_DOUBLY_LINKED_H_

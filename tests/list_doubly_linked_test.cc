@@ -65,3 +65,38 @@ TEST_CASE("Lançamento de exceções para lista vazia") {
     CHECK_THROWS_AS(list.Back(), lstexcpt::ListIsEmpty);
     CHECK_THROWS_AS(list.Print(), lstexcpt::ListIsEmpty);
 }
+
+TEST_CASE("Iterator") {
+    dlkd::List<int> list;
+
+    for (int i = 0; i <= 10; i++) {
+        list.PushBack(i);
+    }
+
+    bool correct = true;
+
+    SUBCASE("Variable Iterator") {
+        dlkd::List<int>::Iterator it;
+        int i = 0;
+        for (it = list.begin(); it != list.end(); it++) {
+            if (it->m_key != i) {
+                correct = false;
+                break;
+            }
+            i++;
+        }
+        CHECK(correct);
+    }
+
+    SUBCASE("foreach") {
+        int i = 0;
+        for (auto it : list) {
+            if (it.m_key != i) {
+                correct = false;
+                break;
+            }
+            i++;
+        }
+        CHECK(correct);
+    }
+}

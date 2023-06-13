@@ -176,7 +176,7 @@ void Vector<typeT>::PopBack() {
 
 template<typename typeT>
 void Vector<typeT>::Clear() {
-    this->m_size == 0;
+    this->m_size = 0;
 }
 
 #endif // VECTOR_H_

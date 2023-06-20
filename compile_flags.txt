@@ -2,5 +2,5 @@
 -I
 include
 -I
-third_party
+include/lib
 --std=c++20

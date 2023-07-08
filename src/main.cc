@@ -4,11 +4,10 @@
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
+#include <cstdlib>
 #include <iostream>
-
-using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    return 0;
+    return EXIT_SUCCESS;
 }

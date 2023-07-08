@@ -30,25 +30,36 @@ MAIN = $(OBJ_DIR)/main.o
 
 PROGRAM_OBJS =	$(OBJ_DIR)/list_doubly_linked.o \
 				$(OBJ_DIR)/list_excpt.o \
+				$(OBJ_DIR)/map.o \
+				$(OBJ_DIR)/node_map.o \
+				$(OBJ_DIR)/node_red_black_tree.o \
+				$(OBJ_DIR)/pair.o \
 				$(OBJ_DIR)/queue.o \
 				$(OBJ_DIR)/queue_excpt.o \
+				$(OBJ_DIR)/queue_singly_linked.o \
+				$(OBJ_DIR)/priority_queue.o \
+				$(OBJ_DIR)/priority_queue_max.o \
+				$(OBJ_DIR)/priority_queue_min.o \
 				$(OBJ_DIR)/vector.o \
 				$(OBJ_DIR)/vector_excpt.o \
 				$(OBJ_DIR)/stack.o \
 				$(OBJ_DIR)/stack_excpt.o \
-				$(OBJ_DIR)/queue_singly_linked.o \
 				$(OBJ_DIR)/stack_singly_linked.o \
 				$(OBJ_DIR)/binary_tree.o \
 				$(OBJ_DIR)/utils.o \
 				$(OBJ_DIR)/node_doubly_linked.o \
-				$(OBJ_DIR)/node_singly_linked.o
+				$(OBJ_DIR)/node_singly_linked.o \
+				$(OBJ_DIR)/red_black_tree.o
 
 TEST_OBJS = $(OBJ_DIR)/list_doubly_linked_test.o \
-			$(OBJ_DIR)/queue_singly_linked_test.o \
+			$(OBJ_DIR)/priority_queue_max_test.o \
 			$(OBJ_DIR)/stack_singly_linked_test.o \
 			$(OBJ_DIR)/stack_test.o \
 			$(OBJ_DIR)/queue_test.o \
+			$(OBJ_DIR)/queue_singly_linked_test.o \
+			$(OBJ_DIR)/map_test.o \
 			$(OBJ_DIR)/vector_test.o \
+			$(OBJ_DIR)/red_black_tree_test.o \
 			$(OBJ_DIR)/main_doctest.o
 
 # CASES

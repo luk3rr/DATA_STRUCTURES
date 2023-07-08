@@ -4,6 +4,9 @@
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
+#ifndef NODE_DOUBLY_LINKED_H_
+#define NODE_DOUBLY_LINKED_H_
+
 // Doubly linked namespace
 namespace dlkd {
     template <typename typeT>
@@ -13,8 +16,13 @@ namespace dlkd {
         Node<typeT> *m_right;
 
         Node(typeT &k) : m_key(k), m_left(nullptr), m_right(nullptr) { }
+
         Node(Node *left, typeT &k) : m_key(k), m_left(left), m_right(nullptr) { }
+
         Node(typeT &k, Node *right) : m_key(k), m_left(nullptr), m_right(right) { }
+
         Node(typeT &k, Node *left, Node *right) : m_key(k), m_left(left), m_right(right) { }
     };
 }
+
+#endif // NODE_DOUBLY_LINKED_H_

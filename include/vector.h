@@ -87,6 +87,57 @@ class Vector {
         @brief Limpa o vector
         */
         void Clear();
+
+        // Implementação do iterator
+        using value_type = typeT;
+        using pointer = typeT *;
+        using reference = typeT &;
+
+        typedef struct Iterator {
+            public:
+                Iterator(pointer ptr) : m_ptr(ptr) { }
+
+                Iterator() { }
+
+                reference operator*() const {
+                    return *m_ptr;
+                }
+
+                pointer operator->() {
+                    return m_ptr;
+                }
+
+                Iterator &operator++() {
+                    m_ptr++;
+                    return *this;
+                }
+
+                Iterator operator++(int) {
+                    Iterator tmp = *this;
+                    ++(*this);
+                    return tmp;
+                }
+
+                friend bool operator==(const Iterator &a, const Iterator &b) {
+                    return a.m_ptr == b.m_ptr;
+                };
+
+                friend bool operator!=(const Iterator &a, const Iterator &b) {
+                    return a.m_ptr != b.m_ptr;
+                };
+
+            private:
+                pointer m_ptr;
+
+        } Iterator;
+
+    Iterator begin() {
+        return Iterator(&m_elements[0]);
+    }
+
+    Iterator end() {
+        return Iterator(&m_elements[m_size]);
+    }
 };
 
 template<typename typeT>

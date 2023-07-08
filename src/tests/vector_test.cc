@@ -66,3 +66,36 @@ TEST_CASE("Verificar igualdade entre vectors") {
     CHECK(vector1 == cpVector1);
     CHECK(!(vector1 == vector2));
 }
+
+TEST_CASE("Iterator") {
+    Vector<int> vec;
+
+
+    for (unsigned int i = 0; i < VECTOR_START_SIZE * 3; i++)
+        vec.PushBack(i);
+
+    REQUIRE(vec.Size() == VECTOR_START_SIZE * 3);
+
+    int value = 0;
+    bool correct = true;
+
+    Vector<int>::Iterator it;
+    for (it = vec.begin(); it != vec.end(); it++) {
+        if (*it != value) {
+            correct = false;
+            break;
+        }
+        value++;
+    }
+
+    value = 0;
+    for (auto pos : vec) {
+        if (pos != value) {
+            correct = false;
+            break;
+        }
+        value++;
+    }
+
+    CHECK(correct);
+}

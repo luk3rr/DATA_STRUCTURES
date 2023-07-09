@@ -1,13 +1,21 @@
 /*
-* Filename: queue_singly_linked.h
+* Filename: queue_slkd.h
 * Created on: May 13, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*
+*
+* Implementação da fila cima de uma lista ligada
+*
+* Implementação com complexidade no pior caso:
+* Enqueue: O(1)
+* Dequeue: O(1)
+* Peek:    O(1)
 */
 
-#ifndef QUEUE_SINGLY_LINKED_H_
-#define QUEUE_SINGLY_LINKED_H_
+#ifndef QUEUE_SLKD_H_
+#define QUEUE_SLKD_H_
 
-#include "node_singly_linked.h"
+#include "node_slkd.h"
 #include "queue_excpt.h"
 
 // Singly linked namespace
@@ -125,4 +133,4 @@ namespace slkd {
     }
 }
 
-#endif // QUEUE_SINGLY_LINKED_H_
+#endif // QUEUE_SLKD_H_

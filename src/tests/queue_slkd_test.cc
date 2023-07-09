@@ -1,5 +1,5 @@
 /*
-* Filename: queue_singly_linked_test.cc
+* Filename: queue_slkd_test.cc
 * Created on: May 13, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
@@ -10,7 +10,7 @@
 
 #include "doctest.h"
 #include "queue_excpt.h"
-#include "queue_singly_linked.h"
+#include "queue_slkd.h"
 
 #define QUEUE_MAX_LENGTH_TEST 10000
 #define QUEUE_MIN_LENGTH_TEST 10

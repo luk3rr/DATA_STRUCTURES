@@ -1,13 +1,13 @@
 /*
-* Filename: stack_singly_linked.h
+* Filename: stack_slkd.h
 * Created on: May 14, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
-#ifndef STACK_SINGLY_LINKED_H_
-#define STACK_SINGLY_LINKED_H_
+#ifndef STACK_SLKD_H_
+#define STACK_SLKD_H_
 
-#include "node_singly_linked.h"
+#include "node_slkd.h"
 #include "stack_excpt.h"
 
 // Singly linked namespace
@@ -139,4 +139,4 @@ namespace slkd {
     }
 }
 
-#endif // STACK_SINGLY_LINKED_H_
+#endif // STACK_SLKD_H_

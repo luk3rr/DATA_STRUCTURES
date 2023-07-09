@@ -12,7 +12,7 @@
 
 #include "queue.h"
 #include "utils.h"
-#include "node_doubly_linked.h"
+#include "node_dlkd.h"
 
 template <typename typeT>
 class BinaryTree {

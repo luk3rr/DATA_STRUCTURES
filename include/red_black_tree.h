@@ -12,6 +12,8 @@
 
 #include "node_red_black_tree.h"
 
+// TODO: Implementar caminhamentos
+
 namespace rbtree {
     template<typename typeT>
     class RedBlackTree {

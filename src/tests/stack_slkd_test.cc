@@ -1,5 +1,5 @@
 /*
-* Filename: stack_singly_linked_test.cc
+* Filename: stack_slkd_test.cc
 * Created on: May 14, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
@@ -9,7 +9,7 @@
 #include <random>
 
 #include "doctest.h"
-#include "stack_singly_linked.h"
+#include "stack_slkd.h"
 #include "stack_excpt.h"
 
 #define STACK_MAX_LENGTH_TEST 10000

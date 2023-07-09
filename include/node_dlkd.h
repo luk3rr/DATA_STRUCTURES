@@ -1,11 +1,11 @@
 /*
-* Filename: node_doubly_linked.h
+* Filename: node_dlkd.h
 * Created on: May 12, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
-#ifndef NODE_DOUBLY_LINKED_H_
-#define NODE_DOUBLY_LINKED_H_
+#ifndef NODE_DLKD_H_
+#define NODE_DLKD_H_
 
 // Doubly linked namespace
 namespace dlkd {
@@ -25,4 +25,4 @@ namespace dlkd {
     };
 }
 
-#endif // NODE_DOUBLY_LINKED_H_
+#endif // NODE_DLKD_H_

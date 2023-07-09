@@ -1,16 +1,16 @@
 /*
-* Filename: list_doubly_linked.h
+* Filename: list_dlkd.h
 * Created on: May 13, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
-#ifndef LIST_DOUBLY_LINKED_H_
-#define LIST_DOUBLY_LINKED_H_
+#ifndef LIST_DLKD_H_
+#define LIST_DLKD_H_
 
 #include <iostream>
 
 #include "list_excpt.h"
-#include "node_doubly_linked.h"
+#include "node_dlkd.h"
 
 // Doubly linked namespace
 namespace dlkd {
@@ -279,4 +279,4 @@ namespace dlkd {
 
 }
 
-#endif // LIST_DOUBLY_LINKED_H_
+#endif // LIST_DLKD_H_

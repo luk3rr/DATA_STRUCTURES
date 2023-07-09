@@ -1,11 +1,11 @@
 /*
-* Filename: node_singly_linked.h
+* Filename: node_slkd.h
 * Created on: May 13, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
-#ifndef NODE_SINGLY_LINKED_H_
-#define NODE_SINGLY_LINKED_H_
+#ifndef NODE_SLKD_H_
+#define NODE_SLKD_H_
 
 // Singly linked namespace
 namespace slkd {
@@ -19,4 +19,4 @@ namespace slkd {
     };
 }
 
-#endif // NODE_SINGLY_LINKED_H_
+#endif // NODE_SLKD_H_

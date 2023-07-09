@@ -3,18 +3,12 @@
 * Created on: June 27, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 *
-* Implementação da fila de prioridade mínima em
-* cima de uma lista ligada
+* Implementação da fila de prioridade mínima em cima de uma lista ligada
 *
 * Complexidade no pior caso:
 * Enqueue: O(n)
 * Dequeue: O(1)
 * Peek:    O(1)
-*
-* OBS.: Implementação com Heap teria:
-* Enqueue: O(1 + log n)
-* Dequeue: O(2 * log n)
-* Peek:    O(2 * log n)
 */
 
 #ifndef PRIORITY_QUEUE_MIN_SLKD_H_
@@ -46,7 +40,7 @@ namespace slkd {
             * @brief Insere um novo elemento na fila
             * @param element Novo elemento
             **/
-            void Enqueue(typeT newNode) override;
+            void Enqueue(typeT element) override;
 
             /**
             * @brief Pega o elemento de menor prioridade, sem removê-lo

@@ -3,18 +3,12 @@
 * Created on: June 27, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 *
-* Implementação da fila de prioridade máxima em
-* cima de uma lista ligada
+* Implementação da fila de prioridade máxima em cima de uma lista ligada
 *
 * Complexidade no pior caso:
 * Enqueue: O(n)
 * Dequeue: O(1)
 * Peek:    O(1)
-*
-* OBS.: Implementação com Heap teria:
-* Enqueue: O(1 + log n)
-* Dequeue: O(2 * log n)
-* Peek:    O(2 * log n)
 */
 
 #ifndef PRIORITY_QUEUE_MAX_SLKD_H_

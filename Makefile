@@ -40,6 +40,8 @@ PROGRAM_OBJS =	$(OBJ_DIR)/list_dlkd.o \
 				$(OBJ_DIR)/priority_queue.o \
 				$(OBJ_DIR)/priority_queue_max_slkd.o \
 				$(OBJ_DIR)/priority_queue_min_slkd.o \
+				$(OBJ_DIR)/priority_queue_max_heap.o \
+				$(OBJ_DIR)/priority_queue_min_heap.o \
 				$(OBJ_DIR)/vector.o \
 				$(OBJ_DIR)/vector_excpt.o \
 				$(OBJ_DIR)/stack.o \
@@ -54,6 +56,8 @@ PROGRAM_OBJS =	$(OBJ_DIR)/list_dlkd.o \
 TEST_OBJS = $(OBJ_DIR)/list_dlkd_test.o \
 			$(OBJ_DIR)/priority_queue_max_slkd_test.o \
 			$(OBJ_DIR)/priority_queue_min_slkd_test.o \
+			$(OBJ_DIR)/priority_queue_max_heap_test.o \
+			$(OBJ_DIR)/priority_queue_min_heap_test.o \
 			$(OBJ_DIR)/stack_slkd_test.o \
 			$(OBJ_DIR)/stack_test.o \
 			$(OBJ_DIR)/queue_test.o \

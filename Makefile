@@ -1,6 +1,6 @@
 # DIRETORIOS
 SRC_DIR = src
-OBJ_DIR = obj
+OBJ_DIR = build
 INC_DIR = include
 BIN_DIR = bin
 TST_DIR = $(SRC_DIR)/tests

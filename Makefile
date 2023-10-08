@@ -27,45 +27,8 @@ CFLAGS = --std=c++20 -O0 -Wall
 
 # ARQUIVOS
 MAIN = $(OBJ_DIR)/main.o
-
-PROGRAM_OBJS =	$(OBJ_DIR)/list_dlkd.o \
-				$(OBJ_DIR)/list_excpt.o \
-				$(OBJ_DIR)/map.o \
-				$(OBJ_DIR)/node_map.o \
-				$(OBJ_DIR)/node_red_black_tree.o \
-				$(OBJ_DIR)/pair.o \
-				$(OBJ_DIR)/queue.o \
-				$(OBJ_DIR)/queue_excpt.o \
-				$(OBJ_DIR)/queue_slkd.o \
-				$(OBJ_DIR)/priority_queue.o \
-				$(OBJ_DIR)/priority_queue_max_slkd.o \
-				$(OBJ_DIR)/priority_queue_min_slkd.o \
-				$(OBJ_DIR)/priority_queue_max_heap.o \
-				$(OBJ_DIR)/priority_queue_min_heap.o \
-				$(OBJ_DIR)/vector.o \
-				$(OBJ_DIR)/vector_excpt.o \
-				$(OBJ_DIR)/stack.o \
-				$(OBJ_DIR)/stack_excpt.o \
-				$(OBJ_DIR)/stack_slkd.o \
-				$(OBJ_DIR)/binary_tree.o \
-				$(OBJ_DIR)/utils.o \
-				$(OBJ_DIR)/node_dlkd.o \
-				$(OBJ_DIR)/node_slkd.o \
-				$(OBJ_DIR)/red_black_tree.o
-
-TEST_OBJS = $(OBJ_DIR)/list_dlkd_test.o \
-			$(OBJ_DIR)/priority_queue_max_slkd_test.o \
-			$(OBJ_DIR)/priority_queue_min_slkd_test.o \
-			$(OBJ_DIR)/priority_queue_max_heap_test.o \
-			$(OBJ_DIR)/priority_queue_min_heap_test.o \
-			$(OBJ_DIR)/stack_slkd_test.o \
-			$(OBJ_DIR)/stack_test.o \
-			$(OBJ_DIR)/queue_test.o \
-			$(OBJ_DIR)/queue_slkd_test.o \
-			$(OBJ_DIR)/map_test.o \
-			$(OBJ_DIR)/vector_test.o \
-			$(OBJ_DIR)/red_black_tree_test.o \
-			$(OBJ_DIR)/main_doctest.o
+PROGRAM_OBJS := $(shell find $(SRC) -type f -name "*.cc" ! -name "main.cc" ! -name "*test.cc" -exec echo '$(OBJ_DIR)/{}' \; | sed 's/src\///;s/\/\.\//\//;s/\.cc/.o/')
+TEST_OBJS := $(shell find $(TST_DIR) -type f -name "*.cc" -exec echo '$(OBJ_DIR)/{}' \; | sed 's/src\/tests\///;s/\/\.\//\//;s/\.cc/.o/')
 
 # CASES
 build: $(OBJ_DIR)/$(PROGRAM_NAME)
@@ -82,7 +45,7 @@ $(OBJ_DIR)/$(TEST_NAME): $(TEST_OBJS) $(PROGRAM_OBJS)
 $(OBJ_DIR)/$(PROGRAM_NAME): $(PROGRAM_OBJS) $(MAIN)
 	$(CC) $(CFLAGS) $(PROGRAM_OBJS) $(MAIN) -o $(BIN_DIR)/$(PROGRAM_NAME)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(INC_DIR)/%.hh
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(INC_DIR)/%.h
 	$(CC) -c $(CFLAGS) $< -I $(INC_DIR) -o $@
 
 $(OBJ_DIR)/%.o: $(TST_DIR)/%.cc

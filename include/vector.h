@@ -19,8 +19,8 @@ template<typename typeT>
 class Vector {
     private:
         typeT *m_elements;
-        std::size_t m_capacity;
-        std::size_t m_size;
+        std::size_t m_capacity; // Max capacity before performing a new resize
+        std::size_t m_size; // num of elements in the array
 
     public:
         /**
@@ -165,9 +165,6 @@ Vector<typeT>::~Vector() {
 
 template<typename typeT>
 typeT &Vector<typeT>::operator[](std::size_t index) {
-    if (index > this->m_size or index < 0)
-        throw vecexcpt::InvalidIndex();
-
     return this->m_elements[index];
 }
 
@@ -221,7 +218,7 @@ void Vector<typeT>::PushBack(typeT element) {
 
 template<typename typeT>
 void Vector<typeT>::PopBack() {
-    if (!this->IsEmpty()) {
+    if (not this->IsEmpty()) {
         this->m_size--;
     }
 }
@@ -233,12 +230,15 @@ void Vector<typeT>::Clear() {
 
 template<typename typeT>
 void Vector<typeT>::Resize(std::size_t newSize) {
-    typeT *newElements = new typeT[newSize];
+    typeT *newElements = new typeT[newSize]();
 
-    for (std::size_t i = 0; i < this->m_size; i++) {
+    std::size_t i;
+    for (i = 0; i < this->m_size; i++) {
+        if (i > newSize) break;
+
         newElements[i] = this->m_elements[i];
     }
-
+    this->m_size = i;
     delete[] this->m_elements;
     this->m_elements = newElements;
     this->m_capacity = newSize;

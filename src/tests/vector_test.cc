@@ -6,6 +6,7 @@
 
 #include "doctest.h"
 #include "vector.h"
+#include "vector_excpt.h"
 
 #define VECTOR_TEST_MAX_SIZE 1000
 
@@ -17,6 +18,16 @@ TEST_CASE("Redimensionamento automático do vector") {
     }
 
     CHECK(vector.Size() == VECTOR_START_SIZE * 3);
+}
+
+TEST_CASE("Redimensionamento manual do vector") {
+    Vector<int> vector;
+
+    vector.Resize(10);
+    REQUIRE(vector.Size() == 0);
+    REQUIRE(vector.GetMaxSize() == 10);
+    CHECK(vector[5] == 0); // Resize deve preencher o array com 0
+    CHECK_THROWS_AS(vector.At(11), vecexcpt::InvalidIndex);
 }
 
 TEST_CASE("Acessar um elemento do vector") {

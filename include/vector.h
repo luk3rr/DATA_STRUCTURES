@@ -9,17 +9,18 @@
 
 #include "utils.h"
 #include "vector_excpt.h"
+#include <cstddef>
 
 #define VECTOR_START_SIZE 100
 
-// TODO implementar funções: resize(n), insert(pos, valor), erase(pos)
+// TODO implementar funções: insert(pos, valor), erase(pos)
 
 template<typename typeT>
 class Vector {
     private:
         typeT *m_elements;
-        unsigned int m_capacity;
-        unsigned int m_size;
+        std::size_t m_capacity;
+        std::size_t m_size;
 
     public:
         /**
@@ -38,7 +39,7 @@ class Vector {
         @return Elemento na posição index
         @throw InvalidIndex Caso o índice seja inválido
         */
-        typeT &operator[](unsigned int index);
+        typeT &operator[](std::size_t index);
 
         /**
         @brief Overload do operador ==
@@ -51,13 +52,13 @@ class Vector {
         @brief Pega o tamanho atual do vector
         @return Inteiro que representa o tamanho do vector
         */
-        unsigned int Size();
+        std::size_t Size();
 
         /**
         @brief Pega o tamanho máximo atual (quando esse limite for alcança o vector é realocado para comportar mais elementos)
         @return Inteiro que representa o tamanho máximo atual do vector
         */
-        unsigned int GetMaxSize();
+        std::size_t GetMaxSize();
 
         /**
         @brief Verifica se o vector está vazio
@@ -70,7 +71,7 @@ class Vector {
         @param index1, index2 Posições dos elementos que serão trocados de posição
         @throw InvalidIndex Caso algum dos índice seja inválido
         */
-        void Swap(unsigned int index1, unsigned int index2);
+        void Swap(std::size_t index1, std::size_t index2);
 
         /**
         @brief Insere um novo elemento no fim do vector
@@ -87,6 +88,11 @@ class Vector {
         @brief Limpa o vector
         */
         void Clear();
+
+        /**
+         * @brief Resize the vector
+         */
+        void Resize(std::size_t newSize);
 
         // Implementação do iterator
         using value_type = typeT;
@@ -153,7 +159,7 @@ Vector<typeT>::~Vector() {
 }
 
 template<typename typeT>
-typeT &Vector<typeT>::operator[](unsigned int index) {
+typeT &Vector<typeT>::operator[](std::size_t index) {
     if (index > this->m_size or index < 0)
         throw vecexcpt::InvalidIndex();
 
@@ -165,7 +171,7 @@ bool Vector<typeT>::operator==(Vector<typeT> &other) {
     if (this->m_size != other.Size())
         return false;
 
-    for (unsigned int i = 0; i < this->m_size; i++) {
+    for (std::size_t i = 0; i < this->m_size; i++) {
         if (this->m_elements[i] != other[i]) {
             return false;
         }
@@ -175,12 +181,12 @@ bool Vector<typeT>::operator==(Vector<typeT> &other) {
 }
 
 template<typename typeT>
-unsigned int Vector<typeT>::Size() {
+std::size_t Vector<typeT>::Size() {
     return this->m_size;
 }
 
 template<typename typeT>
-unsigned int Vector<typeT>::GetMaxSize() {
+std::size_t Vector<typeT>::GetMaxSize() {
     return this->m_capacity;
 }
 
@@ -190,8 +196,8 @@ bool Vector<typeT>::IsEmpty() {
 }
 
 template<typename typeT>
-void Vector<typeT>::Swap(unsigned int index1, unsigned int index2) {
-    if ((unsigned int)utils::Max(index1, index2) > this->m_size)
+void Vector<typeT>::Swap(std::size_t index1, std::size_t index2) {
+    if ((std::size_t)utils::Max(index1, index2) > this->m_size)
         throw vecexcpt::InvalidIndex();
 
     typeT aux = this->m_elements[index1];
@@ -202,17 +208,7 @@ void Vector<typeT>::Swap(unsigned int index1, unsigned int index2) {
 template<typename typeT>
 void Vector<typeT>::PushBack(typeT element) {
     if (this->m_size == this->m_capacity) {
-        unsigned int newCapacity = this->m_capacity * 2;
-        typeT *newElements = new typeT[newCapacity];
-
-        for (unsigned int i = 0; i < this->m_size; i++) {
-            newElements[i] = this->m_elements[i];
-        }
-
-        delete[] this->m_elements;
-        this->m_elements = newElements;
-        this->m_capacity = newCapacity;
-
+        this->Resize(this->m_capacity * 2);
     }
 
     this->m_elements[this->m_size++] = element;
@@ -228,6 +224,19 @@ void Vector<typeT>::PopBack() {
 template<typename typeT>
 void Vector<typeT>::Clear() {
     this->m_size = 0;
+}
+
+template<typename typeT>
+void Vector<typeT>::Resize(std::size_t newSize) {
+    typeT *newElements = new typeT[newSize];
+
+    for (std::size_t i = 0; i < this->m_size; i++) {
+        newElements[i] = this->m_elements[i];
+    }
+
+    delete[] this->m_elements;
+    this->m_elements = newElements;
+    this->m_capacity = newSize;
 }
 
 #endif // VECTOR_H_

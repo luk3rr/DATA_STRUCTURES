@@ -9,7 +9,7 @@
 
 #define VECTOR_TEST_MAX_SIZE 1000
 
-TEST_CASE("Redimensionamento do vector") {
+TEST_CASE("Redimensionamento automático do vector") {
     Vector<int> vector;
 
     for (unsigned int i = 0; i < VECTOR_START_SIZE * 3; i++) {
@@ -28,6 +28,7 @@ TEST_CASE("Acessar um elemento do vector") {
 
     REQUIRE(vector.Size() == 50);
     CHECK(vector[10] == 10);
+    CHECK(vector.At(10) == 10);
 }
 
 TEST_CASE("Alterar um elemento do vector") {

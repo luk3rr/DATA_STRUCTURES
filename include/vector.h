@@ -94,6 +94,11 @@ class Vector {
          */
         void Resize(std::size_t newSize);
 
+        /**
+         * @return The element at the specified index
+         **/
+        typeT &At(std::size_t index);
+
         // Implementação do iterator
         using value_type = typeT;
         using pointer = typeT *;
@@ -237,6 +242,14 @@ void Vector<typeT>::Resize(std::size_t newSize) {
     delete[] this->m_elements;
     this->m_elements = newElements;
     this->m_capacity = newSize;
+}
+
+template<typename typeT>
+typeT &Vector<typeT>::At(std::size_t index) {
+    if (index > this->m_size or index < 0)
+        throw vecexcpt::InvalidIndex();
+
+    return this->m_elements[index];
 }
 
 #endif // VECTOR_H_

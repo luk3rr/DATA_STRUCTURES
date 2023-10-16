@@ -7,7 +7,9 @@
 #ifndef PRIORITY_QUEUE_H_
 #define PRIORITY_QUEUE_H_
 
-template<typename typeT>
+#include "utils.h"
+
+template<typename typeT, typename Compare = utils::less<typeT>>
 class PriorityQueue {
     public:
         virtual void Enqueue(typeT key) = 0;

@@ -11,16 +11,19 @@
 #include "vector_excpt.h"
 #include <cstddef>
 
-#define VECTOR_START_SIZE 100
+#define VECTOR_START_SIZE 8
+// The growth factor determines how much a vector should grow when it needs to be resized
+#define VECTOR_GROWTH_FACTOR 2
+
 
 // TODO implementar funções: insert(pos, valor), erase(pos)
 
 template<typename typeT>
 class Vector {
     private:
-        typeT *m_elements;
-        std::size_t m_capacity; // Max capacity before performing a new resize
-        std::size_t m_size; // num of elements in the array
+        typeT *m_elements; // Pointer to first element of vector (array)
+        std::size_t m_capacity; // Total space used by vector, including elements and free space
+        std::size_t m_size; // Num of elements in vector
 
     public:
         /**
@@ -91,8 +94,16 @@ class Vector {
 
         /**
          * @brief Resize the vector
+         * @param newSize New size of the vector
+         * @param val Default value for custom values when resizing
          */
-        void Resize(std::size_t newSize);
+        void Resize(std::size_t newSize, typeT val = typeT());
+
+        /**
+         * @brief Allocate a new space for this vector
+         * @param newalloc Size of the new allocate
+         **/
+        void Reserve(std::size_t newalloc);
 
         /**
          * @return The element at the specified index
@@ -199,7 +210,7 @@ bool Vector<typeT>::IsEmpty() {
 
 template<typename typeT>
 void Vector<typeT>::Swap(std::size_t index1, std::size_t index2) {
-    if ((std::size_t)utils::Max(index1, index2) > this->m_size)
+    if ((std::size_t)utils::Max(index1, index2) > this->m_capacity)
         throw vecexcpt::InvalidIndex();
 
     typeT aux = this->m_elements[index1];
@@ -210,7 +221,7 @@ void Vector<typeT>::Swap(std::size_t index1, std::size_t index2) {
 template<typename typeT>
 void Vector<typeT>::PushBack(typeT element) {
     if (this->m_size == this->m_capacity) {
-        this->Resize(this->m_capacity * 2);
+        this->Reserve(this->m_capacity * VECTOR_GROWTH_FACTOR);
     }
 
     this->m_elements[this->m_size++] = element;
@@ -229,24 +240,37 @@ void Vector<typeT>::Clear() {
 }
 
 template<typename typeT>
-void Vector<typeT>::Resize(std::size_t newSize) {
-    typeT *newElements = new typeT[newSize]();
+void Vector<typeT>::Resize(std::size_t newSize, typeT val) {
+    this->Reserve(newSize);
+
+    for (std::size_t i = this->m_size; i < newSize; ++i) {
+        this->m_elements[i] = typeT();
+    }
+
+    this->m_size = newSize;
+}
+
+template<typename typeT>
+void Vector<typeT>::Reserve(std::size_t newAlloc) {
+
+    if (newAlloc <= this->m_capacity)
+        return;
+
+    typeT *newElements = new typeT[newAlloc]();
 
     std::size_t i;
     for (i = 0; i < this->m_size; i++) {
-        if (i > newSize) break;
-
         newElements[i] = this->m_elements[i];
     }
-    this->m_size = i;
+
     delete[] this->m_elements;
     this->m_elements = newElements;
-    this->m_capacity = newSize;
+    this->m_capacity = newAlloc;
 }
 
 template<typename typeT>
 typeT &Vector<typeT>::At(std::size_t index) {
-    if (index > this->m_size or index < 0)
+    if (index > this->m_size)
         throw vecexcpt::InvalidIndex();
 
     return this->m_elements[index];

@@ -4,9 +4,9 @@
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 */
 
+#include <cstddef>
 #include "doctest.h"
 #include "vector.h"
-#include "vector_excpt.h"
 
 #define VECTOR_TEST_MAX_SIZE 1000
 
@@ -22,12 +22,20 @@ TEST_CASE("Redimensionamento automático do vector") {
 
 TEST_CASE("Redimensionamento manual do vector") {
     Vector<int> vector;
+    std::size_t newSize = 10;
 
-    vector.Resize(10);
-    REQUIRE(vector.Size() == 0);
+    vector.Resize(newSize);
+    REQUIRE(vector.Size() == 10);
     REQUIRE(vector.GetMaxSize() == 10);
+
     CHECK(vector[5] == 0); // Resize deve preencher o array com 0
-    CHECK_THROWS_AS(vector.At(11), vecexcpt::InvalidIndex);
+    CHECK_THROWS_AS(vector.At(newSize + 1), vecexcpt::InvalidIndex);
+
+    for (unsigned int i = 0; i < newSize; i++) {
+        vector[i] = i;
+    }
+
+    CHECK(vector.At(newSize - 1) == newSize - 1);
 }
 
 TEST_CASE("Acessar um elemento do vector") {

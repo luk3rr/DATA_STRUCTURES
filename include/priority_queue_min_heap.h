@@ -24,6 +24,7 @@ namespace heap {
     class MinPQueue : public PriorityQueue<typeT> {
         private:
             Vector<typeT> m_heap;
+            Compare m_comp; // Custom comparator
 
             /**
              * @brief Reajusta o heap após a remoção de um elemento
@@ -38,7 +39,11 @@ namespace heap {
             void MinHeapifyUp(unsigned int index);
 
         public:
-            MinPQueue();
+            /**
+             * @brief Constructor for MinPQueue
+             * @param comp The custom comparator to use (default is the standard comparator)
+             */
+            MinPQueue(const Compare& comp = Compare());
             ~MinPQueue();
 
             /**
@@ -78,7 +83,7 @@ namespace heap {
     };
 
     template<typename typeT, typename Compare>
-    MinPQueue<typeT, Compare>::MinPQueue() { }
+    MinPQueue<typeT, Compare>::MinPQueue(const Compare& comp) : m_comp(comp) { }
 
     template<typename typeT, typename Compare>
     MinPQueue<typeT, Compare>::~MinPQueue() { }
@@ -89,10 +94,10 @@ namespace heap {
         unsigned int right = 2 * index + 2;
         unsigned int largest = index;
 
-        if (left < this->m_heap.Size() and Compare()(this->m_heap[left], this->m_heap[largest]))
+        if (left < this->m_heap.Size() and this->m_comp(this->m_heap[left], this->m_heap[largest]))
             largest = left;
 
-        if (right < this->m_heap.Size() and Compare()(this->m_heap[right], this->m_heap[largest]))
+        if (right < this->m_heap.Size() and this->m_comp(this->m_heap[right], this->m_heap[largest]))
             largest = right;
 
         if (largest != index) {

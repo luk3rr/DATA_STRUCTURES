@@ -37,6 +37,16 @@ class Vector {
         ~Vector();
 
         /**
+         * @brief Copy constructor
+         **/
+        Vector(const Vector<typeT> &other);
+
+        /**
+         * @brief Assignment operator
+         **/
+        Vector &operator=(const Vector<typeT> &other);
+
+        /**
         @brief Overload do operador []
         @param index Índice do elemento que será buscado
         @return Elemento na posição index
@@ -172,6 +182,34 @@ Vector<typeT>::Vector() {
 template<typename typeT>
 Vector<typeT>::~Vector() {
     delete[] this->m_elements;
+}
+
+template<typename typeT>
+Vector<typeT>::Vector(const Vector<typeT> &other) {
+    this->m_capacity = other.m_capacity;
+    this->m_size = other.m_size;
+    this->m_elements = new typeT[this->m_capacity];
+
+    for (std::size_t i = 0; i < this->m_size; i++)
+        this->m_elements = other.m_elements[i];
+}
+
+template<typename typeT>
+Vector<typeT> &Vector<typeT>::operator=(const Vector<typeT> &other) {
+    if (this == &other)
+        return *this;
+
+    delete[] this->m_elements;
+
+    this->m_capacity = other.m_capacity;
+    this->m_size = other.m_size;
+    this->m_elements = new typeT[this->m_capacity];
+
+    for (std::size_t i = 0; i < this->m_size; i++)
+        this->m_elements[i] = other.m_elements[i];
+
+
+    return *this;
 }
 
 template<typename typeT>

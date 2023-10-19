@@ -110,7 +110,7 @@ namespace heap {
     void MinPQueue<typeT, Compare>::MinHeapifyUp(unsigned int index) {
         unsigned int parent = (index - 1) / 2;
 
-        while (index > 0 and this->m_heap[index] < this->m_heap[parent]) {
+        while (index > 0 and this->m_comp(this->m_heap[index], this->m_heap[parent])) {
             this->m_heap.Swap(index, parent);
             index = parent;
             parent = (index - 1) / 2;

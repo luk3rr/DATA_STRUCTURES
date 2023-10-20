@@ -191,7 +191,7 @@ Vector<typeT>::Vector(const Vector<typeT> &other) {
     this->m_elements = new typeT[this->m_capacity];
 
     for (std::size_t i = 0; i < this->m_size; i++)
-        this->m_elements = other.m_elements[i];
+        this->m_elements[i] = other.m_elements[i];
 }
 
 template<typename typeT>

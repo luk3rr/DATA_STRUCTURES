@@ -2,6 +2,8 @@
 * Filename: priority_queue.h
 * Created on: June 27, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+*
+* Priority Queue base class
 */
 
 #ifndef PRIORITY_QUEUE_H_

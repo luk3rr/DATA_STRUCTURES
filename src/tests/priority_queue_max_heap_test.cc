@@ -5,10 +5,11 @@
 */
 
 #include "doctest.h"
-#include "priority_queue_max_heap.h"
+#include "utils.h"
+#include "priority_queue_heap.h"
 
 TEST_CASE("Inserir/Remover elemento") {
-    heap::MaxPQueue<int> pqueue;
+    heap::PriorityQueue<int, utils::greater<int>> pqueue;
 
     SUBCASE("Caso 1: Lista vazia") {
         CHECK_THROWS_AS(pqueue.Peek(), queexcpt::QueueIsEmpty);

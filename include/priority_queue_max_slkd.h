@@ -21,7 +21,7 @@
 // Singly linked namespace
 namespace slkd {
     template<typename typeT>
-    class MaxPQueue : public PriorityQueue<typeT> {
+    class MaxPQueue : public PriorityQueueBase<typeT> {
         private:
             slkd::Node<typeT> *m_head;
             unsigned int m_size;

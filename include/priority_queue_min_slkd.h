@@ -21,7 +21,7 @@
 // Singly linked namespace
 namespace slkd {
     template<typename typeT>
-    class MinPQueue : public PriorityQueue<typeT> {
+    class MinPQueue : public PriorityQueueBase<typeT> {
         private:
             slkd::Node<typeT> *m_head;
             unsigned int m_size;

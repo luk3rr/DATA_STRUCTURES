@@ -29,6 +29,16 @@ namespace utils {
             return a < b;
         }
     };
+
+    /**
+     * @brief Default greater-than comparator
+     */
+    template<typename typeT>
+    struct greater {
+        bool operator()(const typeT& a, const typeT& b) const {
+            return a > b;
+        }
+    };
 } // namespace utils
 
 #endif // UTILS_H_

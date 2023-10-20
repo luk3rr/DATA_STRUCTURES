@@ -1,18 +1,20 @@
 /*
-* Filename: priority_queue_min_heap.h
+* Filename: priority_queue_heap.h
 * Created on: July  9, 2023
 * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
 *
-* Implementação da fila de prioridade mínima em cima de um heap
+* Implementação da fila de prioridade mínima/máxima em cima de um heap
+* OBS.: Por default a fila de prioridade é mínima. Para utilizar a máxima, use o template Compare
+*       com um comparador customizado do "typeT"
 *
 * Complexidade no pior caso:
-* Enqueue: O(1 + log n) -> log n é o tempo de execução do MinHeapifyDown
-* Dequeue: O(1 + log n) -> log n é o tempo de execução do MinHeapifyUp
+* Enqueue: O(1 + log n) -> log n é o tempo de execução do HeapifyDown
+* Dequeue: O(1 + log n) -> log n é o tempo de execução do HeapifyUp
 * Peek:    O(1)
 */
 
-#ifndef PRIORITY_QUEUE_MIN_HEAP_H_
-#define PRIORITY_QUEUE_MIN_HEAP_H_
+#ifndef PRIORITY_QUEUE_HEAP_H_
+#define PRIORITY_QUEUE_HEAP_H_
 
 #include "priority_queue.h"
 #include "queue_excpt.h"
@@ -21,7 +23,7 @@
 // Heap namespace
 namespace heap {
     template <typename typeT, typename Compare = utils::less<typeT>>
-    class MinPQueue : public PriorityQueue<typeT> {
+    class PriorityQueue : public PriorityQueueBase<typeT> {
         private:
             Vector<typeT> m_heap;
             Compare m_comp; // Custom comparator
@@ -30,21 +32,21 @@ namespace heap {
              * @brief Reajusta o heap após a remoção de um elemento
              * @param index Índice do elemento que foi removido
              **/
-            void MinHeapifyDown(unsigned int index);
+            void HeapifyDown(unsigned int index);
 
             /**
              * @brief Reajusta o heap após a inserção de um elemento
              * @param index Índice do elemento que foi inserido
              **/
-            void MinHeapifyUp(unsigned int index);
+            void HeapifyUp(unsigned int index);
 
         public:
             /**
-             * @brief Constructor for MinPQueue
+             * @brief Constructor for PriorityQueue
              * @param comp The custom comparator to use (default is the standard comparator)
              */
-            MinPQueue(const Compare& comp = Compare());
-            ~MinPQueue();
+            PriorityQueue(const Compare& comp = Compare());
+            ~PriorityQueue();
 
             /**
             * @brief Insere um novo elemento na fila
@@ -83,13 +85,13 @@ namespace heap {
     };
 
     template<typename typeT, typename Compare>
-    MinPQueue<typeT, Compare>::MinPQueue(const Compare& comp) : m_comp(comp) { }
+    PriorityQueue<typeT, Compare>::PriorityQueue(const Compare& comp) : m_comp(comp) { }
 
     template<typename typeT, typename Compare>
-    MinPQueue<typeT, Compare>::~MinPQueue() { }
+    PriorityQueue<typeT, Compare>::~PriorityQueue() { }
 
     template<typename typeT, typename Compare>
-    void MinPQueue<typeT, Compare>::MinHeapifyDown(unsigned int index) {
+    void PriorityQueue<typeT, Compare>::HeapifyDown(unsigned int index) {
         unsigned int left = 2 * index + 1;
         unsigned int right = 2 * index + 2;
         unsigned int largest = index;
@@ -102,12 +104,12 @@ namespace heap {
 
         if (largest != index) {
             this->m_heap.Swap(index, largest);
-            this->MinHeapifyDown(largest);
+            this->HeapifyDown(largest);
         }
     }
 
     template<typename typeT, typename Compare>
-    void MinPQueue<typeT, Compare>::MinHeapifyUp(unsigned int index) {
+    void PriorityQueue<typeT, Compare>::HeapifyUp(unsigned int index) {
         unsigned int parent = (index - 1) / 2;
 
         while (index > 0 and this->m_comp(this->m_heap[index], this->m_heap[parent])) {
@@ -118,13 +120,13 @@ namespace heap {
     }
 
     template<typename typeT, typename Compare>
-    void MinPQueue<typeT, Compare>::Enqueue(typeT element) {
+    void PriorityQueue<typeT, Compare>::Enqueue(typeT element) {
         this->m_heap.PushBack(element);
-        this->MinHeapifyUp(this->m_heap.Size() - 1);
+        this->HeapifyUp(this->m_heap.Size() - 1);
     }
 
     template<typename typeT, typename Compare>
-    typeT MinPQueue<typeT, Compare>::Peek() {
+    typeT PriorityQueue<typeT, Compare>::Peek() {
         if (this->m_heap.IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
@@ -132,32 +134,32 @@ namespace heap {
     }
 
     template<typename typeT, typename Compare>
-    typeT MinPQueue<typeT, Compare>::Dequeue() {
+    typeT PriorityQueue<typeT, Compare>::Dequeue() {
         if (this->m_heap.IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
         typeT max = this->m_heap[0];
         this->m_heap.Swap(0, this->m_heap.Size() - 1);
         this->m_heap.PopBack();
-        this->MinHeapifyDown(0);
+        this->HeapifyDown(0);
 
         return max;
     }
 
     template<typename typeT, typename Compare>
-    bool MinPQueue<typeT, Compare>::IsEmpty() {
+    bool PriorityQueue<typeT, Compare>::IsEmpty() {
         return this->m_heap.IsEmpty();
     }
 
     template<typename typeT, typename Compare>
-    unsigned int MinPQueue<typeT, Compare>::Size() {
+    unsigned int PriorityQueue<typeT, Compare>::Size() {
         return this->m_heap.Size();
     }
 
     template<typename typeT, typename Compare>
-    void MinPQueue<typeT, Compare>::Clear() {
+    void PriorityQueue<typeT, Compare>::Clear() {
         this->m_heap.Clear();
     }
 }
 
-#endif // PRIORITY_QUEUE_MIN_HEAP_H_
+#endif // PRIORITY_QUEUE_HEAP_H_

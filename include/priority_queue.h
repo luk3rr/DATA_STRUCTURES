@@ -10,7 +10,8 @@
 #include "utils.h"
 
 template<typename typeT, typename Compare = utils::less<typeT>>
-class PriorityQueue {
+class PriorityQueueBase
+{
     public:
         virtual void Enqueue(typeT key) = 0;
 

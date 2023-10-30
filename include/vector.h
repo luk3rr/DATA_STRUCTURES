@@ -32,6 +32,12 @@ class Vector {
         Vector();
 
         /**
+        @brief Construtor
+        @param size Espaço inicial alocado para o vector
+        */
+        Vector(std::size_t size);
+
+        /**
         @brief Destrutor da classe
         */
         ~Vector();
@@ -175,6 +181,13 @@ class Vector {
 template<typename typeT>
 Vector<typeT>::Vector() {
     this->m_capacity = VECTOR_START_SIZE;
+    this->m_size = 0;
+    this->m_elements = new typeT[this->m_capacity];
+}
+
+template<typename typeT>
+Vector<typeT>::Vector(std::size_t size) {
+    this->m_capacity = size;
     this->m_size = 0;
     this->m_elements = new typeT[this->m_capacity];
 }

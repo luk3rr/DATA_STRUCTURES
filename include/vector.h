@@ -59,6 +59,7 @@ class Vector {
         @throw InvalidIndex Caso o índice seja inválido
         */
         typeT &operator[](std::size_t index);
+        typeT &operator[](std::size_t index) const;
 
         /**
         @brief Overload do operador ==
@@ -72,6 +73,7 @@ class Vector {
         @return Inteiro que representa o tamanho do vector
         */
         std::size_t Size();
+        std::size_t Size() const;
 
         /**
         @brief Pega o tamanho máximo atual (quando esse limite for alcança o vector é realocado para comportar mais elementos)
@@ -231,6 +233,11 @@ typeT &Vector<typeT>::operator[](std::size_t index) {
 }
 
 template<typename typeT>
+typeT &Vector<typeT>::operator[](std::size_t index) const {
+    return this->m_elements[index];
+}
+
+template<typename typeT>
 bool Vector<typeT>::operator==(Vector<typeT> &other) {
     if (this->m_size != other.Size())
         return false;
@@ -246,6 +253,11 @@ bool Vector<typeT>::operator==(Vector<typeT> &other) {
 
 template<typename typeT>
 std::size_t Vector<typeT>::Size() {
+    return this->m_size;
+}
+
+template<typename typeT>
+std::size_t Vector<typeT>::Size() const {
     return this->m_size;
 }
 

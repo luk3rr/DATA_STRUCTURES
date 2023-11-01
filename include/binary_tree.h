@@ -13,6 +13,7 @@
 #include "queue.h"
 #include "utils.h"
 #include "node_dlkd.h"
+#include "binary_tree_excpt.h"
 
 template <typename typeT>
 class BinaryTree {
@@ -163,6 +164,15 @@ class BinaryTree {
         @return Inteiro que corresponde ao índice do elemento no array, -1 caso o elemento não esteja no array
         */
         int KeyPosition(typeT (&array)[], int key);
+
+        /**
+        @brief Insere uma nova árvore já existente
+        @param root Ponteiro para a raiz da árvore que será armazenada
+        @param nodes Número de nós da árvore
+        @throw bntexcpt::TreeIsNotEmpty Caso já exista uma árvore armazenada
+        @throw bntexcpt::NewTreeIsEmpty Caso a árvore que será inserida não tenha nós
+        */
+        void InsertExistingTree(dlkd::Node<typeT> *root, int nodes);
 
         /**
         @brief Imprime a árvore
@@ -525,6 +535,18 @@ void BinaryTree<typeT>::DumpTree(std::ofstream &output) {
         this->DumpTree(this->m_root->m_left, level + 1, "", output, true);
         this->DumpTree(this->m_root->m_right, level + 1, "", output, false);
     }
+}
+
+template<typename typeT>
+void BinaryTree<typeT>::InsertExistingTree(dlkd::Node<typeT> *root, int nodes) {
+    if (this->_root != nullptr and this->_nodes == 0)
+        throw bntexcpt::TreeIsNotEmpty();
+
+    if (root == nullptr or nodes < 1)
+        throw bntexcpt::NewTreeIsEmpty();
+
+    this->_nodes = nodes + 1;
+    this->_root = root;
 }
 
 template<typename typeT>

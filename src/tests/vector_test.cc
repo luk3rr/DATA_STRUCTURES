@@ -119,3 +119,13 @@ TEST_CASE("Iterator") {
 
     CHECK(correct);
 }
+
+
+TEST_CASE("Construtor com initializer list")
+{
+    Vector<int> vector({1, 2, 3, 5, 9});
+
+    CHECK(vector[0] == 1);
+    CHECK(vector[2] == 3);
+    CHECK(vector[4] == 9);
+}

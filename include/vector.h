@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "vector_excpt.h"
 #include <cstddef>
+#include <initializer_list>
 
 #define VECTOR_START_SIZE 8
 // The growth factor determines how much a vector should grow when it needs to be resized
@@ -36,6 +37,11 @@ class Vector {
         @param size Espaço inicial alocado para o vector
         */
         Vector(std::size_t size);
+
+        /**
+         * @brief Construtor with initializer list to receive data as {x1, x2, x3, ..., xn}
+         **/
+        Vector(const std::initializer_list<typeT> values);
 
         /**
         @brief Destrutor da classe
@@ -192,6 +198,16 @@ Vector<typeT>::Vector(std::size_t size) {
     this->m_capacity = size;
     this->m_size = 0;
     this->m_elements = new typeT[this->m_capacity];
+}
+
+template<typename typeT>
+Vector<typeT>::Vector(std::initializer_list<typeT> values)
+{
+    this->m_elements = new typeT[values.size()];
+    this->m_capacity = values.size();
+    this->m_size = values.size();
+
+    std::copy(values.begin(), values.end(), m_elements);
 }
 
 template<typename typeT>

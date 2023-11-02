@@ -341,8 +341,8 @@ void Vector<typeT>::Swap(std::size_t index1, std::size_t index2)
 
     typeT aux = this->m_elements[index1];
 
-    this->m_elements[index2] = aux;
     this->m_elements[index1] = this->m_elements[index2];
+    this->m_elements[index2] = aux;
 }
 
 template<typename typeT>

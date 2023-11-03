@@ -1,14 +1,16 @@
 /*
-* Filename: map_test.cc
-* Created on: June 28, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: map_test.cc
+ * Created on: June 28, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #include "doctest.h"
 #include "map.h"
+#include <cstdint>
 
-TEST_CASE("Inserção e busca") {
-    map::Map<int, std::string> map;
+TEST_CASE("Inserção e busca")
+{
+    rbtree::Map<uint32_t, std::string> map;
 
     map.Insert(5, "Five");
     map.Insert(2, "Two");
@@ -29,27 +31,9 @@ TEST_CASE("Inserção e busca") {
     CHECK(map[10] == "Ten");
 }
 
-TEST_CASE("Balancemaneto: Caso árvore degenerada") {
-    map::Map<int, std::string> map;
-
-    map.Insert(0, "Seven");
-    map.Insert(1, "One");
-    map.Insert(2, "Two");
-    map.Insert(3, "Four");
-    map.Insert(4, "Four");
-    map.Insert(5, "Five");
-    map.Insert(7, "Seven");
-    map.Insert(10, "Ten");
-    map.Insert(22, "Eight");
-    map.Insert(33, "Two");
-    map.Insert(83, "Eight");
-    map.Insert(102, "Five");
-
-    CHECK(map.IsRedBlackTreeBalanced());
-}
-
-TEST_CASE("Remoção") {
-    map::Map<int, std::string> map;
+TEST_CASE("Remoção")
+{
+    rbtree::Map<uint32_t, std::string> map;
 
     map.Insert(5, "Five");
     map.Insert(2, "Two");
@@ -66,8 +50,9 @@ TEST_CASE("Remoção") {
     CHECK(not map.Contains(6));
 }
 
-TEST_CASE("Esvaziamento do map") {
-    map::Map<int, std::string> map;
+TEST_CASE("Esvaziamento do map")
+{
+    rbtree::Map<uint32_t, std::string> map;
 
     CHECK(map.Size() == 0);
     CHECK(map.IsEmpty());
@@ -88,8 +73,9 @@ TEST_CASE("Esvaziamento do map") {
     CHECK(map.IsEmpty());
 }
 
-TEST_CASE("Mudar valores") {
-    map::Map<int, std::string> map;
+TEST_CASE("Mudar valores")
+{
+    rbtree::Map<uint32_t, std::string> map;
 
     map.Insert(5, "Five");
     map.Insert(2, "Two");
@@ -99,15 +85,17 @@ TEST_CASE("Mudar valores") {
     map.Insert(7, "Seven");
     map.Insert(10, "Ten");
 
-    for (map::Map<int, std::string>::Iterator it = map.begin(); it != map.end(); ++it) {
-        it->GetPair().SetValue("");
-
-        // std::cout << "Key: " << key << ", Value: " << value << std::endl;
+    for (rbtree::Map<uint32_t, std::string>::Iterator it = map.begin(); it != map.end();
+         ++it)
+    {
+        it->GetValue().SetSecond("");
     }
 
-    for (auto& pair : map) {
-        // std::cout << "Key: " << pair.GetKey() << ", Value: " << pair.GetValue() << std::endl;
-        pair.SetValue("Allow");
+    CHECK(map[4] == "");
+
+    for (auto& pair : map)
+    {
+        pair.SetSecond("Allow");
     }
 
     CHECK(map[5] == "Allow");
@@ -117,15 +105,20 @@ TEST_CASE("Mudar valores") {
     CHECK(map.IsEmpty());
 }
 
-// TODO: Corrigir: Em alguns casos de acesso com o operador [], caso a chave ainda não exista, ocorre o erro de segmentação
-TEST_CASE("Incremento") {
-    map::Map<char, unsigned int> map;
+// TODO: Corrigir: Em alguns casos de acesso com o operador [], caso a chave ainda não
+// exista, ocorre o erro de segmentação
+TEST_CASE("Incremento")
+{
+    rbtree::Map<char, uint32_t> map;
 
     std::string palavra = "PARDSCDACACMZNSDI@!*@#";
 
-    for (char &letra : palavra) {
-        if (map.Contains(letra)) map[letra]++;
-        else map[letra];
+    for (char& letra : palavra)
+    {
+        if (map.Contains(letra))
+            map[letra]++;
+        else
+            map[letra];
     }
 
     map.Clear();

@@ -1,36 +1,45 @@
 /*
-* Filename: queue_slkd.h
-* Created on: May 13, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*
-*
-* Implementação da fila cima de uma lista ligada
-*
-* Implementação com complexidade no pior caso:
-* Enqueue: O(1)
-* Dequeue: O(1)
-* Peek:    O(1)
-*/
+ * Filename: queue_slkd.h
+ * Created on: May 13, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #ifndef QUEUE_SLKD_H_
 #define QUEUE_SLKD_H_
 
-#include "node_slkd.h"
+#include "node.h"
+#include "queue_base.h"
 #include "queue_excpt.h"
+#include <cstddef>
 
 // Singly linked namespace
-namespace slkd {
-    template <typename typeT>
-    class Queue {
+namespace slkd
+{
+    /**
+     * @brief Implementation of a queue using a singly-linked list
+     *
+     * This class implements a queue data structure on top of a singly-linked list. It
+     * offers efficient enqueue, dequeue, and peek operations
+     *
+     * Implementation with worst-case time complexities:
+     * - Enqueue: O(1)
+     * - Dequeue: O(1)
+     * - Peek: O(1)
+     *
+     * @tparam typeT The type of elements stored in the queue
+     */
+    template<typename typeT>
+    class Queue : QueueBase<typeT>
+    {
         private:
-            Node<typeT> *m_first;
-            Node<typeT> *m_last;
-            int m_size;
+            Node<typeT>* m_first;
+            Node<typeT>* m_last;
+            std::size_t  m_size;
 
             /**
-            @brief Deleta o primeiro nó da fila
-            @throw queexcpt::QueueIsEmpty Caso a fila esteja vazia
-            */
+             * @brief Deletes the first node from the queue
+             * @throw queexcpt::QueueIsEmpty If the queue is empty
+             */
             void DeleteFirst();
 
         public:
@@ -39,98 +48,123 @@ namespace slkd {
             ~Queue();
 
             /**
-            @brief Quantidade de elementos na fila
-            @return A quantidade de elementos na fila (tamanho)
-            */
-            int Size();
+             * @brief Insert a new element into the queue
+             * @param element New element
+             **/
+            void Enqueue(typeT element) override;
 
             /**
-            @brief Enfileira um elemento
-            @param element Elemento que será enfileirado
-            */
-            void Enqueue(typeT element);
+             * @brief Get the element at the front of the queue
+             * @return The element at the front of the queue
+             **/
+            typeT Peek() override;
 
             /**
-            @brief Verifica se a fila está vazia
-            @return True se a fila estiver vazia, False caso contrário
-            */
-            bool IsEmpty();
+             * @brief Remove and return the element at the front of the queue
+             * @return The element at the front of the queue
+             **/
+            typeT Dequeue() override;
 
             /**
-            @brief Desenfileira um elemento
-            @return Primeira elemento da fila
-            @throw queexcpt::QueueIsEmpty Caso a fila esteja vazia
-            */
-            typeT Dequeue();
+             * @brief Check if the queue is empty
+             * @return True if it is empty, False otherwis
+             **/
+            bool IsEmpty() override;
 
             /**
-            @brief Remove todos os elementos da fila
-            */
-            void Clear();
+             * @brief Get the current size of the queue
+             * @return The current size of the queue
+             **/
+            std::size_t Size() override;
+
+            /**
+             * @brief Delete all nodes in the queue
+             **/
+            void Clear() override;
     };
 
-    template <typename typeT>
-    Queue<typeT>::Queue() {
-        this->m_size = 0;
+    template<typename typeT>
+    Queue<typeT>::Queue()
+    {
+        this->m_size  = 0;
         this->m_first = this->m_last = nullptr;
     }
 
-    template <typename typeT>
-    Queue<typeT>::~Queue() {
+    template<typename typeT>
+    Queue<typeT>::~Queue()
+    {
         this->Clear();
     }
 
-    template <typename typeT>
-    int Queue<typeT>::Size() {
-        return this->m_size;
-    }
-
-    template <typename typeT>
-    bool Queue<typeT>::IsEmpty() {
-        if (this->m_size == 0) return true;
-        return false;
-    }
-
-    template <typename typeT>
-    void Queue<typeT>::Enqueue(typeT element) {
-        if (this->IsEmpty()) {
+    template<typename typeT>
+    void Queue<typeT>::Enqueue(typeT element)
+    {
+        if (this->IsEmpty())
+        {
             this->m_first = this->m_last = new Node<typeT>(element);
         }
-        else {
-            Node<typeT> *aux = new Node<typeT>(element);
-            this->m_last->m_next = aux;
+        else
+        {
+            Node<typeT>* aux = new Node<typeT>(element);
+            this->m_last->SetNextNode(aux);
             this->m_last = aux;
         }
         this->m_size++;
     }
 
-    template <typename typeT>
-    void Queue<typeT>::DeleteFirst() {
+    template<typename typeT>
+    typeT Queue<typeT>::Peek()
+    {
         if (this->IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
-        Node<typeT> *toDelete = this->m_first;
-        this->m_first = this->m_first->m_next;
-        delete toDelete;
-        this->m_size--;
+        return this->m_first->GetValue();
     }
 
-    template <typename typeT>
-    typeT Queue<typeT>::Dequeue() {
+    template<typename typeT>
+    typeT Queue<typeT>::Dequeue()
+    {
         if (this->IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
-        typeT element = this->m_first->m_key;
+        typeT element = this->m_first->GetValue();
         this->DeleteFirst();
         return element;
     }
 
-    template <typename typeT>
-    void Queue<typeT>::Clear() {
-        while (!this->IsEmpty()) {
+    template<typename typeT>
+    bool Queue<typeT>::IsEmpty()
+    {
+        return (this->m_size == 0);
+    }
+
+    template<typename typeT>
+    std::size_t Queue<typeT>::Size()
+    {
+        return this->m_size;
+    }
+
+    template<typename typeT>
+    void Queue<typeT>::Clear()
+    {
+        while (not this->IsEmpty())
+        {
             this->DeleteFirst();
         }
     }
-}
+
+    template<typename typeT>
+    void Queue<typeT>::DeleteFirst()
+    {
+        if (this->IsEmpty())
+            throw queexcpt::QueueIsEmpty();
+
+        Node<typeT>* toDelete = this->m_first;
+        this->m_first         = this->m_first->GetNextNode();
+        delete toDelete;
+        this->m_size--;
+    }
+
+} // namespace slkd
 
 #endif // QUEUE_SLKD_H_

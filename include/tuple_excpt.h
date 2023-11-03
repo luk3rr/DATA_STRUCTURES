@@ -1,8 +1,8 @@
 /*
-* Filename: tuple_excpt.h
-* Created on: October 29, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: tuple_excpt.h
+ * Created on: October 29, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #ifndef TUPLE_EXCPT_H_
 #define TUPLE_EXCPT_H_
@@ -11,11 +11,12 @@
 #include <string>
 
 // tuple exception namespace
-namespace tplexcpt {
+namespace tplexcpt
+{
     class InvalidIndex : public std::exception
     {
         public:
-            const char *what() const throw();
+            const char* what() const throw();
     };
 
 } // namespace tplexcpt

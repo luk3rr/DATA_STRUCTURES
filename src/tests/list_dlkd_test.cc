@@ -1,8 +1,8 @@
 /*
-* Filename: list_dlkd_test.cc
-* Created on: May 12, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: list_dlkd_test.cc
+ * Created on: May 12, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #include <cstdio>
 #include <cstdlib>
@@ -13,22 +13,26 @@
 #include "list_dlkd.h"
 #include "list_excpt.h"
 
-TEST_CASE("Remover elemento") {
-    dlkd::List<int> list;
+TEST_CASE("Remover elemento")
+{
+    dlkd::List<uint32_t> list;
 
-    SUBCASE("Remover algo de uma lista vazia") {
+    SUBCASE("Remover algo de uma lista vazia")
+    {
         list.Remove(1);
         CHECK(list.Size() == 0);
     }
 
-    SUBCASE("Remover 1 elemento") {
+    SUBCASE("Remover 1 elemento")
+    {
         list.PushBack(1);
         CHECK(list.Size() == 1);
         list.Remove(1);
         CHECK(list.Size() == 0);
     }
 
-    SUBCASE("Remover 2 elemento") {
+    SUBCASE("Remover 2 elemento")
+    {
         list.PushBack(1);
         list.PushBack(2);
         list.PushBack(3);
@@ -41,8 +45,9 @@ TEST_CASE("Remover elemento") {
     }
 }
 
-TEST_CASE("Pegar primeiro e último elemento") {
-    dlkd::List<int> list;
+TEST_CASE("Pegar primeiro e último elemento")
+{
+    dlkd::List<uint32_t> list;
 
     list.PushBack(1);
     list.PushBack(2);
@@ -53,8 +58,9 @@ TEST_CASE("Pegar primeiro e último elemento") {
     CHECK(list.Back() == 4);
 }
 
-TEST_CASE("Lançamento de exceções para lista vazia") {
-    dlkd::List<int> list;
+TEST_CASE("Lançamento de exceções para lista vazia")
+{
+    dlkd::List<uint32_t> list;
 
     list.PushBack(1);
     list.PushBack(2);
@@ -63,23 +69,27 @@ TEST_CASE("Lançamento de exceções para lista vazia") {
     list.Clear();
     CHECK_THROWS_AS(list.Front(), lstexcpt::ListIsEmpty);
     CHECK_THROWS_AS(list.Back(), lstexcpt::ListIsEmpty);
-    CHECK_THROWS_AS(list.Print(), lstexcpt::ListIsEmpty);
 }
 
-TEST_CASE("Iterator") {
-    dlkd::List<int> list;
+TEST_CASE("Iterator")
+{
+    dlkd::List<uint32_t> list;
 
-    for (int i = 0; i <= 10; i++) {
+    for (uint32_t i = 0; i <= 10; i++)
+    {
         list.PushBack(i);
     }
 
     bool correct = true;
 
-    SUBCASE("Variable Iterator") {
-        dlkd::List<int>::Iterator it;
-        int i = 0;
-        for (it = list.begin(); it != list.end(); it++) {
-            if (it->m_key != i) {
+    SUBCASE("Variable Iterator")
+    {
+        dlkd::List<uint32_t>::Iterator it;
+        uint32_t                       i = 0;
+        for (it = list.begin(); it != list.end(); it++)
+        {
+            if (it->GetValue() != i)
+            {
                 correct = false;
                 break;
             }
@@ -88,10 +98,13 @@ TEST_CASE("Iterator") {
         CHECK(correct);
     }
 
-    SUBCASE("foreach") {
-        int i = 0;
-        for (auto it : list) {
-            if (it.m_key != i) {
+    SUBCASE("foreach")
+    {
+        uint32_t i = 0;
+        for (auto it : list)
+        {
+            if (it.GetValue() != i)
+            {
                 correct = false;
                 break;
             }

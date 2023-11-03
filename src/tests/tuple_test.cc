@@ -1,13 +1,13 @@
 /*
-* Filename: tuple_test.cc
-* Created on: October 29, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: tuple_test.cc
+ * Created on: October 29, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #include "doctest.h"
 
-#include <string>
 #include "tuple.h"
+#include <string>
 
 TEST_CASE("Tuple with two elements")
 {

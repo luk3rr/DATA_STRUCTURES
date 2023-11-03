@@ -165,13 +165,21 @@ class Vector
         typedef struct Iterator
         {
             public:
-                Iterator(pointer ptr) : m_ptr(ptr) {}
+                Iterator(pointer ptr)
+                    : m_ptr(ptr)
+                { }
 
-                Iterator() {}
+                Iterator() { }
 
-                reference operator*() const { return *m_ptr; }
+                reference operator*() const
+                {
+                    return *m_ptr;
+                }
 
-                pointer operator->() { return m_ptr; }
+                pointer operator->()
+                {
+                    return m_ptr;
+                }
 
                 Iterator& operator++()
                 {
@@ -201,9 +209,15 @@ class Vector
 
         } Iterator;
 
-        Iterator begin() { return Iterator(&m_elements[0]); }
+        Iterator begin()
+        {
+            return Iterator(&m_elements[0]);
+        }
 
-        Iterator end() { return Iterator(&m_elements[m_size]); }
+        Iterator end()
+        {
+            return Iterator(&m_elements[m_size]);
+        }
 };
 
 template<typename typeT>

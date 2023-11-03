@@ -1,259 +1,315 @@
 /*
-* Filename: red_black_tree.h
-* Created on: July  7, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: red_black_tree.h
+ * Created on: July  7, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #ifndef RED_BLACK_TREE_H_
 #define RED_BLACK_TREE_H_
 
-#include <iostream>
+#include <cstddef>
 #include <fstream>
+#include <iostream>
 
-#include "node_red_black_tree.h"
+#include "node_rbtree.h"
+#include "utils.h"
 
-// TODO: Implementar caminhamentos
+namespace rbtree
+{
+    /**
+     * @brief A Red-Black Tree data structure class
+     *
+     * This class represents a Red-Black Tree, a type of self-balancing binary search
+     * tree. It is designed to efficiently store and manage elements of type 'typeT'
+     *
+     * Time Complexity:
+     *   Function       Worst case      Amortized
+     *    insert         O(log n)         O(1)
+     *    delete         O(log n)         O(1)
+     *    search         O(log n)       O(log n)
+     *
+     * Space Complexity: O(n)
+     *
+     * @tparam typeT The type of elements stored in the Red-Black Tree
+     * @tparam lessComparator The custom comparator for less-than comparisons
+     * @tparam equalComparator The custom comparator for equal comparisons
+     */
+    template<typename typeT,
+             typename lessComparator  = utils::less<typeT>,
+             typename equalComparator = utils::equal<typeT>>
+    class RedBlackTree
+    {
+        protected:
+            Node<typeT>* m_root;     // Pointer to the root node
+            std::size_t  m_numNodes; // Total number of nodes in the tree
 
-namespace rbtree {
-    template<typename typeT>
-    class RedBlackTree {
-        private:
-            Node<typeT> *m_root;
-            unsigned int m_nodes;
-
-            /**
-            * @brief Inserir um novo par na RedBlackTree
-            * @param parent Parente do nó atual
-            * @param node Nó atual da chamada recursiva
-            * @param key Chave que será armazenada
-            * @return Ponteiro para o novo nó que foi inserido
-            */
-            Node<typeT> *Insert(Node<typeT> *parent, Node<typeT> *&node, const typeT &key);
-
-            /**
-            * @brief Corrige as propriedades da árvore red black após uma inserção
-            * @param Nó que foi inserido
-            **/
-            void FixInsert(Node<typeT> *node);
-
-            /**
-            * @brief Deleta um determinado nó
-            * @param node Nó que será deletado
-            */
-            void DeleteNode(Node<typeT> *node);
-
-            /**
-            * @brief Corrige as propriedades da árvore red black após uma remoção
-            * @param Nó que se iniciará a correção
-            **/
-            void FixDelete(Node<typeT> *node);
-
-            /**
-            * @brief Faz o transplante entre dois nós
-            * @param node1, node2 Nós que serão transplantados
-            **/
-            void Transplant(Node<typeT> *&node1, Node<typeT> *&node2);
+            // Custom comparators
+            lessComparator  m_lessComp;
+            equalComparator m_equalComp;
 
             /**
-            * @brief Busca pelo nó que contém uma determinada chave
-            * @param key Chave que será usada na busca
-            * @return Ponteiro para o nó ou nullptr caso o nó não tenha sido encontrado
-            **/
-            Node<typeT> *Search(const typeT &key);
+             * @brief Insert a new key-value pair into the Red-Black Tree.
+             * @param parent The parent node of the current recursive call.
+             * @param node The current node in the recursive call.
+             * @param key The key to be stored.
+             * @return Pointer to the new node that was inserted.
+             */
+            Node<typeT>*
+            Insert(Node<typeT>* parent, Node<typeT>*& node, const typeT& key);
 
             /**
-            * @brief Busca pelo nó que contém uma determinada chave
-            * @param node Nó atual da chamada recursiva
-            * @param key Chave que será usada na busca
-            * @return Ponteiro para o nó ou nullptr caso o nó não tenha sido encontrado
-            **/
-            Node<typeT> *Search(Node<typeT> *node, const typeT &key);
+             * @brief Corrects the Red-Black Tree properties after an insertion.
+             * @param node The node that was inserted.
+             */
+            void FixInsert(Node<typeT>* node);
 
             /**
-            * @brief Realiza a rotação para a esquerda
-            * @param node Nó que será rotacionado
-            * @return Ponteiro para o nó que que ficou no lugar do nó que foi rotacionado
-            **/
-            Node<typeT> *RotateLeft(Node<typeT> *node);
+             * @brief Delete a specific node
+             * @param node The node to be deleted
+             */
+            void DeleteNode(Node<typeT>* node);
 
             /**
-            * @brief Realiza a rotação para a direita
-            * @param node Nó que será rotacionado
-            * @return Ponteiro para o nó que que ficou no lugar do nó que foi rotacionado
-            **/
-            Node<typeT> *RotateRight(Node<typeT> *node);
+             * @brief Corrects the Red-Black Tree properties after a deletion
+             * @param node The node from which the correction will start
+             */
+            void FixDelete(Node<typeT>* node);
 
             /**
-            * @brief Move um nó vermelho para a esquerda
-            * @param node Nó que será movido
-            * @return Ponteiro para o nó que que ficou no lugar do nó que foi movido
-            **/
-            Node<typeT> *MoveRed2Left(Node<typeT> *node);
+             * @brief Transplants one node with another
+             * @param node1 The first node
+             * @param node2 The second node
+             */
+            void Transplant(Node<typeT>*& node1, Node<typeT>*& node2);
 
             /**
-            * @brief Move um nó vermelho para a direita
-            * @param node Nó que será movido
-            * @return Ponteiro para o nó que que ficou no lugar do nó que foi movido
-            **/
-            Node<typeT> *MoveRed2Right(Node<typeT> *node);
+             * @brief Search for the node containing a specific key
+             * @param node The current node in the recursive call
+             * @param key The key used in the search
+             * @return Pointer to the node or nullptr if the node was not found
+             */
+            Node<typeT>* Search(Node<typeT>* node, const typeT& key);
 
             /**
-            * @brief Busca o nó mais a esquerda (menor chave)
-            * @param node Nó onde a busca será iniciada
-            * @return Ponteiro para o nó mais a esquerda
-            **/
-            Node<typeT> *FindLeftMostNode(Node<typeT> *node);
+             * @brief Perform a left rotation
+             * @param node The node to be rotated
+             * @return Pointer to the node that takes the place of the rotated node
+             */
+            Node<typeT>* RotateLeft(Node<typeT>* node);
 
             /**
-            * @brief Deleta o nó mais a esquerda
-            * @param node Nó onde será iniciada a busca do nó mais a esquerda
-            * @return
-            **/
-            Node<typeT> *DeleteLeftMostNode(Node<typeT> *node);
+             * @brief Perform a right rotation
+             * @param node The node to be rotated
+             * @return Pointer to the node that takes the place of the rotated node
+             */
+            Node<typeT>* RotateRight(Node<typeT>* node);
 
             /**
-            * @brief Modifica a cor de uma família de nós (nó e seus filhos)
-            * @param parent Nó onde ocorrerá a modificação
-            **/
-            void ChangeFamilyColor(Node<typeT> *parent);
+             * @brief Move a red node to the left
+             * @param node The node to be moved
+             * @return Pointer to the node that takes the place of the moved node
+             */
+            Node<typeT>* MoveRed2Left(Node<typeT>* node);
 
             /**
-            * @brief Deleta todo o RedBlackTree (chamada recursiva)
-            */
-            void Clear(Node<typeT> *&node);
+             * @brief Move a red node to the right
+             * @param node The node to be moved
+             * @return Pointer to the node that takes the place of the moved node
+             */
+            Node<typeT>* MoveRed2Right(Node<typeT>* node);
 
             /**
-            * @brief Imprime a árvore
-            * @param output Arquivo em que a impressão será feita
-            * @param node Nó atual
-            * @param side, deve receber True se o nó está o lado esquerdo ou False, caso o nó esteja do lado direito
-            */
-            void DumpTree(Node<typeT> *&node, const std::string &vBar, std::ofstream &output, bool sideIsLeft);
+             * @brief Find the leftmost node (smallest key)
+             * @param node The node where the search will begin
+             * @return Pointer to the leftmost node
+             */
+            Node<typeT>* FindLeftMostNode(Node<typeT>* node);
 
             /**
-            * @brief Verifica a quantidade de nós pretos na árvore
-            * @param node Nó atual da chamada recursiva
-            * @return A quantidade de nós pretos
-            **/
-            int GetBlackNodeCount(Node<typeT> *&node);
+             * @brief Delete the leftmost node
+             * @param node The node where the search for the leftmost node will begin
+             * @return
+             */
+            Node<typeT>* DeleteLeftMostNode(Node<typeT>* node);
 
             /**
-            * @brief Verifica se as propriedades da red black tree estão satisfeitas
-            * @param node Nó atual da chamada recursiva
-            **/
-            bool IsRedBlackTreeBalanced(Node<typeT> *&node);
+             * @brief Modify the color of a family of nodes (node and its children)
+             * @param parent The node where the modification will occur
+             */
+            void ChangeFamilyColor(Node<typeT>* parent);
+
+            /**
+             * @brief Delete the entire Red-Black Tree (recursive call)
+             */
+            void Clear(Node<typeT>*& node);
+
+            /**
+             * @brief Print the tree
+             * @param output The file where the printing will be done
+             * @param node The current node
+             * @param sideIsLeft Should receive True if the node is on the left side or
+             * False if the node is on the right side
+             */
+            void DumpTree(Node<typeT>*&      node,
+                          const std::string& vBar,
+                          std::ofstream&     output,
+                          bool               sideIsLeft);
+
+            /**
+             * @brief Check the number of black nodes in the tree
+             * @param node The current node in the recursive call
+             * @return The number of black nodes
+             */
+            std::size_t GetBlackNodeCount(Node<typeT>*& node);
+
+            /**
+             * @brief Check if the Red-Black Tree properties are satisfied
+             * @param node The current node in the recursive call
+             */
+            bool IsRedBlackTreeBalanced(Node<typeT>*& node);
 
         public:
-            RedBlackTree();
+            RedBlackTree(const lessComparator&  lessComp  = lessComparator(),
+                         const equalComparator& equalComp = equalComparator());
 
             ~RedBlackTree();
 
             /**
-            * @brief Overload para inserir um novo elemento sem o apontador para o nó
-            * @param key Chave que será armazenada na árvore
-            * @return Ponteiro para o nó que foi inserido
-            */
-            Node<typeT> *Insert(const typeT &key);
+             * @brief Overload to insert a new element without the node pointer
+             * @param key Key to be stored in the Red-Black Tree
+             * @return Pointer to the inserted node
+             */
+            Node<typeT>* Insert(const typeT& key);
 
             /**
-            * @brief Diz a quantidade de elementos que há na RedBlackTree
-            * @return Quantidade de elementos no RedBlackTree
-            */
-            unsigned int Size();
+             * @brief Search for the node containing a specific key
+             * @param key The key used in the search
+             * @return Pointer to the node or nullptr if the node was not found
+             */
+            Node<typeT>* Search(const typeT& key);
 
             /**
-            * @brief Diz se a RedBlackTree está vazia
-            * @return True se estiver vazio, False caso contrário
-            **/
+             * @brief Returns the number of elements in the Red-Black Tree
+             * @return Number of elements in the Red-Black Tree
+             */
+            std::size_t Size();
+
+            /**
+             * @brief Checks if the Red-Black Tree is empty
+             * @return True if it's empty, False otherwise
+             */
             bool IsEmpty();
 
             /**
-            * @brief Diz se a árvore está balanceada
-            * @return True se estiver, False caso contrário
-            **/
+             * @brief Checks if the tree is balanced
+             * @return True if it's balanced, False otherwise
+             */
             bool IsRedBlackTreeBalanced();
 
             /**
-            * @brief Imprime a árvore
-            * @param output Arquivo em que a impressão será feita
-            **/
-            void DumpTree(std::ofstream &output);
+             * @brief Prints the tree
+             * @param output The file where the printing will be done
+             */
+            void DumpTree(std::ofstream& output);
 
             /**
-            * @brief Remove um elemento da RedBlackTree
-            * @param key Chave do elemento que será removido
-            **/
-            void Remove(const typeT &key);
+             * @brief Remove an element from the Red-Black Tree
+             * @param key Key of the element to be removed
+             */
+            void Remove(const typeT& key);
 
             /**
-            * @brief Deleta toda a RedBlackTree
-            */
+             * @brief Deletes the entire Red-Black Tree
+             */
             void Clear();
-
     };
 
-    template<typename typeT>
-    RedBlackTree<typeT>::RedBlackTree() {
-        this->m_root = nullptr;
-        this->m_nodes = 0;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    RedBlackTree<typeT, lessComparator, equalComparator>::RedBlackTree(
+        const lessComparator&  lessComp,
+        const equalComparator& equalComp)
+        : m_lessComp(lessComp),
+          m_equalComp(equalComp)
+    {
+        this->m_root     = nullptr;
+        this->m_numNodes = 0;
     }
 
-    template<typename typeT>
-    RedBlackTree<typeT>::~RedBlackTree() {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    RedBlackTree<typeT, lessComparator, equalComparator>::~RedBlackTree()
+    {
         this->Clear();
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::Insert(const typeT &key) {
-        if (this->m_root == nullptr) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::Insert(const typeT& key)
+    {
+        if (this->m_root == nullptr)
+        {
             this->m_root = new Node<typeT>(key);
-            this->m_nodes++;
+            this->m_numNodes++;
             this->m_root->SetColor(BLACK);
             return this->m_root;
         }
-        else {
-            if (key < this->m_root->GetKey())
-                return this->Insert(this->m_root, this->m_root->m_left, key);
+        else
+        {
+            if (this->m_lessComp(key, this->m_root->GetValue()))
+                return this->Insert(this->m_root, this->m_root->GetLeftNode(), key);
 
             else
-                return this->Insert(this->m_root, this->m_root->m_right, key);
+                return this->Insert(this->m_root, this->m_root->GetRightNode(), key);
         }
     }
 
-    template <typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::Insert(Node<typeT> *parent, Node<typeT> *&node, const typeT &key) {
-        if (node == nullptr) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::Insert(Node<typeT>*  parent,
+                                                                 Node<typeT>*& node,
+                                                                 const typeT&  key)
+    {
+        if (node == nullptr)
+        {
             node = new Node<typeT>(key, parent);
-            this->m_nodes++;
+            this->m_numNodes++;
             this->FixInsert(node);
             return node;
         }
-        else {
-            if (key < node->GetKey())
-                return this->Insert(node, node->m_left, key);
+        else
+        {
+            if (this->m_lessComp(key, node->GetValue()))
+                return this->Insert(node, node->GetLeftNode(), key);
 
             else
-                return this->Insert(node, node->m_right, key);
+                return this->Insert(node, node->GetRightNode(), key);
         }
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::FixInsert(Node<typeT> *node) {
-        Node<typeT> *uncle = nullptr;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void
+    RedBlackTree<typeT, lessComparator, equalComparator>::FixInsert(Node<typeT>* node)
+    {
+        Node<typeT>* uncle = nullptr;
 
-        while (node != this->m_root and node->GetParent() and node->GetParent()->GetColor() == RED) {
-            if (node->GetParent() == node->GetParent()->GetParent()->GetRight()) {
+        while (node != this->m_root and node->GetParent() and
+               node->GetParent()->GetColor() == RED)
+        {
+            if (node->GetParent() == node->GetParent()->GetParent()->GetRightNode())
+            {
 
-                uncle = node->GetParent()->GetParent()->GetLeft();
+                uncle = node->GetParent()->GetParent()->GetLeftNode();
 
-                if (uncle and uncle->GetColor() == RED) {
+                if (uncle and uncle->GetColor() == RED)
+                {
                     uncle->SetColor(BLACK);
                     node->GetParent()->SetColor(BLACK);
                     node->GetParent()->GetParent()->SetColor(RED);
                     node = node->GetParent()->GetParent();
                 }
-                else {
-                    if (node == node->GetParent()->GetLeft()) {
+                else
+                {
+                    if (node == node->GetParent()->GetLeftNode())
+                    {
                         node = node->GetParent();
                         this->RotateRight(node);
                     }
@@ -262,17 +318,21 @@ namespace rbtree {
                     this->RotateLeft(node->GetParent()->GetParent());
                 }
             }
-            else {
-                uncle = node->GetParent()->GetParent()->GetRight();
+            else
+            {
+                uncle = node->GetParent()->GetParent()->GetRightNode();
 
-                if (uncle and uncle->GetColor() == RED) {
+                if (uncle and uncle->GetColor() == RED)
+                {
                     uncle->SetColor(BLACK);
                     node->GetParent()->SetColor(BLACK);
                     node->GetParent()->GetParent()->SetColor(RED);
                     node = node->GetParent()->GetParent();
                 }
-                else {
-                    if (node == node->GetParent()->GetRight()) {
+                else
+                {
+                    if (node == node->GetParent()->GetRightNode())
+                    {
                         node = node->GetParent();
                         this->RotateLeft(node);
                     }
@@ -285,131 +345,157 @@ namespace rbtree {
         this->m_root->SetColor(BLACK);
     }
 
-    template<typename typeT>
-    unsigned int RedBlackTree<typeT>::Size() {
-        return this->m_nodes;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    std::size_t RedBlackTree<typeT, lessComparator, equalComparator>::Size()
+    {
+        return this->m_numNodes;
     }
 
-    template<typename typeT>
-    bool RedBlackTree<typeT>::IsEmpty() {
-        if (this->m_nodes == 0)
-            return true;
-
-        return false;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    bool RedBlackTree<typeT, lessComparator, equalComparator>::IsEmpty()
+    {
+        return (this->m_numNodes == 0);
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::Remove(const typeT &key) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::Remove(const typeT& key)
+    {
         this->DeleteNode(this->Search(key));
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::DeleteNode(Node<typeT> *node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void
+    RedBlackTree<typeT, lessComparator, equalComparator>::DeleteNode(Node<typeT>* node)
+    {
         if (node == nullptr)
             return;
 
-        Node<typeT> *nodeCopy = node;
-        Node<typeT> *aux;
-        Color nodeColor = node->GetColor();
+        Node<typeT>* nodeCopy = node;
+        Node<typeT>* aux;
+        Color        nodeColor = node->GetColor();
 
-        if (node->m_left == nullptr) {
-            aux = node->GetRight();
-            this->Transplant(node, node->m_right);
+        if (node->GetLeftNode() == nullptr)
+        {
+            aux = node->GetRightNode();
+
+            this->Transplant(node, node->GetRightNode());
         }
-        else if (node->GetRight() == nullptr) {
-            aux = node->GetLeft();
-            this->Transplant(node, node->m_left);
+        else if (node->GetRightNode() == nullptr)
+        {
+            aux = node->GetLeftNode();
+
+            this->Transplant(node, node->GetLeftNode());
         }
-        else {
-            nodeCopy = this->FindLeftMostNode(node->GetRight());
+        else
+        {
+            nodeCopy  = this->FindLeftMostNode(node->GetRightNode());
             nodeColor = nodeCopy->GetColor();
-            aux = nodeCopy->GetRight();
+            aux       = nodeCopy->GetRightNode();
 
-            if (aux and nodeCopy->GetParent() == node) {
+            if (aux and nodeCopy->GetParent() == node)
+            {
                 aux->SetParent(nodeCopy);
             }
-            else {
-                this->Transplant(nodeCopy, nodeCopy->m_right);
-                nodeCopy->SetRight(node->GetRight());
+            else
+            {
+                this->Transplant(nodeCopy, node->GetRightNode());
+                nodeCopy->SetRightNode(node->GetRightNode());
 
-                if (nodeCopy->GetRight() and nodeCopy->GetRight()->GetParent())
-                    nodeCopy->GetRight()->SetParent(nodeCopy);
+                if (nodeCopy->GetRightNode() and nodeCopy->GetRightNode()->GetParent())
+                    nodeCopy->GetRightNode()->SetParent(nodeCopy);
             }
 
             this->Transplant(node, nodeCopy);
 
-            nodeCopy->SetLeft(node->GetLeft());
-            nodeCopy->GetLeft()->SetParent(nodeCopy);
+            nodeCopy->SetLeftNode(node->GetLeftNode());
+            nodeCopy->GetLeftNode()->SetParent(nodeCopy);
             nodeCopy->SetColor(node->GetColor());
         }
-        delete node;
-        this->m_nodes--;
 
-        if (nodeColor == BLACK) {
+        delete node;
+        this->m_numNodes--;
+
+        if (nodeColor == BLACK)
+        {
             this->FixDelete(aux);
         }
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::FixDelete(Node<typeT> *node) {
-        Node<typeT> *aux = nullptr;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void
+    RedBlackTree<typeT, lessComparator, equalComparator>::FixDelete(Node<typeT>* node)
+    {
+        Node<typeT>* aux = nullptr;
 
-        while (node != this->m_root and node and node->GetColor() == BLACK) {
-            if (node == node->GetParent()->GetLeft()) {
-                aux = node->GetParent()->GetRight();
+        while (node != this->m_root and node and node->GetColor() == BLACK)
+        {
+            if (node == node->GetParent()->GetLeftNode())
+            {
+                aux = node->GetParent()->GetRightNode();
 
-                if (aux and aux->GetColor() == RED) {
+                if (aux and aux->GetColor() == RED)
+                {
                     aux->SetColor(BLACK);
                     node->GetParent()->SetColor(RED);
                     this->RotateLeft(node->GetParent());
-                    aux = node->GetParent()->GetRight();
+                    aux = node->GetParent()->GetRightNode();
                 }
 
-                if (aux->GetLeft() and aux->GetLeft()->GetColor() == BLACK and aux->GetRight() and aux->GetRight()->GetColor() == BLACK) {
+                if (aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK and
+                    aux->GetRightNode() and aux->GetRightNode()->GetColor() == BLACK)
+                {
                     aux->SetColor(RED);
                     node = node->GetParent();
                 }
-                else {
-                    if (aux->GetRight() and aux->GetRight()->GetColor() == BLACK) {
-                        aux->GetLeft()->SetColor(BLACK);
+                else
+                {
+                    if (aux->GetRightNode() and
+                        aux->GetRightNode()->GetColor() == BLACK)
+                    {
+                        aux->GetLeftNode()->SetColor(BLACK);
                         aux->SetColor(RED);
                         this->RotateRight(aux);
-                        aux = node->GetParent()->GetRight();
+                        aux = node->GetParent()->GetRightNode();
                     }
 
                     aux->SetColor(node->GetParent()->GetColor());
                     node->GetParent()->SetColor(BLACK);
-                    aux->GetRight()->SetColor(BLACK);
+                    aux->GetRightNode()->SetColor(BLACK);
                     this->RotateLeft(node->GetParent());
                     node = this->m_root;
                 }
             }
-            else {
-                aux = node->GetParent()->GetLeft();
-                if (aux and aux->GetColor() == RED) {
+            else
+            {
+                aux = node->GetParent()->GetLeftNode();
+                if (aux and aux->GetColor() == RED)
+                {
                     aux->SetColor(BLACK);
                     node->GetParent()->SetColor(RED);
                     this->RotateRight(node->GetParent());
-                    aux = node->GetParent()->GetLeft();
+                    aux = node->GetParent()->GetLeftNode();
                 }
 
-                // Possivel erro nesse if
-                if (aux->GetRight() and aux->GetRight()->GetColor() == BLACK) {
+                // Possível erro nesse if
+                if (aux->GetRightNode() and aux->GetRightNode()->GetColor() == BLACK)
+                {
                     aux->SetColor(RED);
                     node = node->GetParent();
                 }
-                else {
-                    if (aux->GetLeft() and aux->GetLeft()->GetColor() == BLACK) {
-                        aux->GetRight()->SetColor(BLACK);
+                else
+                {
+                    if (aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK)
+                    {
+                        aux->GetRightNode()->SetColor(BLACK);
                         aux->SetColor(RED);
                         this->RotateLeft(aux);
-                        aux = node->GetParent()->GetLeft();
+                        aux = node->GetParent()->GetLeftNode();
                     }
                 }
 
                 aux->SetColor(node->GetParent()->GetColor());
                 node->GetParent()->SetColor(BLACK);
-                aux->GetLeft()->SetColor(BLACK);
+                aux->GetLeftNode()->SetColor(BLACK);
                 this->RotateRight(node->GetParent());
                 node = this->m_root;
             }
@@ -418,100 +504,117 @@ namespace rbtree {
             node->SetColor(BLACK);
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::Transplant(Node<typeT> *&node1, Node<typeT> *&node2) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::Transplant(
+        Node<typeT>*& node1,
+        Node<typeT>*& node2)
+    {
         if (node1->GetParent() == nullptr)
             this->m_root = node2;
 
-        else if (node1 == node1->GetParent()->GetLeft())
-            node1->GetParent()->SetLeft(node2);
+        else if (node1 == node1->GetParent()->GetLeftNode())
+            node1->GetParent()->SetLeftNode(node2);
 
         else
-            node1->GetParent()->SetRight(node2);
+            node1->GetParent()->SetRightNode(node2);
 
         if (node2 != nullptr)
             node2->SetParent(node1->GetParent());
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::Search(const typeT &key) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::Search(const typeT& key)
+    {
         return this->Search(this->m_root, key);
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::Search(Node<typeT> *node, const typeT &key) {
-        if (node == nullptr or key == node->GetKey())
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::Search(Node<typeT>* node,
+                                                                 const typeT& key)
+    {
+        if (node == nullptr or this->m_equalComp(key, node->GetValue()))
             return node;
 
-        if (key < node->GetKey())
-            return this->Search(node->m_left, key);
+        if (this->m_lessComp(key, node->GetValue()))
+            return this->Search(node->GetLeftNode(), key);
 
         else
-            return this->Search(node->m_right, key);
+            return this->Search(node->GetRightNode(), key);
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::RotateLeft(Node<typeT> *node) {
-        if (node == nullptr or node->GetRight() == nullptr)
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::RotateLeft(Node<typeT>* node)
+    {
+        if (node == nullptr or node->GetRightNode() == nullptr)
             return node;
 
-        Node<typeT> *pivot = node->GetRight();
-        node->SetRight(pivot->GetLeft());
+        Node<typeT>* pivot = node->GetRightNode();
+        node->SetRightNode(pivot->GetLeftNode());
 
-        if (pivot->GetLeft() != nullptr)
-            pivot->GetLeft()->SetParent(node);
+        if (pivot->GetLeftNode() != nullptr)
+            pivot->GetLeftNode()->SetParent(node);
 
         pivot->SetParent(node->GetParent());
 
         if (node->GetParent() == nullptr)
             this->m_root = pivot;
 
-        else if (node == node->GetParent()->GetLeft())
-            node->GetParent()->SetLeft(pivot);
+        else if (node == node->GetParent()->GetLeftNode())
+            node->GetParent()->SetLeftNode(pivot);
 
         else
-            node->GetParent()->SetRight(pivot);
+            node->GetParent()->SetRightNode(pivot);
 
-        pivot->SetLeft(node);
+        pivot->SetLeftNode(node);
         node->SetParent(pivot);
 
         return pivot;
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::RotateRight(Node<typeT> *node) {
-        if (node == nullptr or node->GetLeft() == nullptr)
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::RotateRight(Node<typeT>* node)
+    {
+        if (node == nullptr or node->GetLeftNode() == nullptr)
             return node;
 
-        Node<typeT> *pivot = node->GetLeft();
-        node->SetLeft(pivot->GetRight());
+        Node<typeT>* pivot = node->GetLeftNode();
+        node->SetLeftNode(pivot->GetRightNode());
 
-        if (pivot->GetRight() != nullptr)
-            pivot->GetRight()->SetParent(node);
+        if (pivot->GetRightNode() != nullptr)
+            pivot->GetRightNode()->SetParent(node);
 
         pivot->SetParent(node->GetParent());
 
         if (node->GetParent() == nullptr)
             this->m_root = pivot;
 
-        else if (node == node->GetParent()->GetLeft())
-            node->GetParent()->SetLeft(pivot);
+        else if (node == node->GetParent()->GetLeftNode())
+            node->GetParent()->SetLeftNode(pivot);
 
         else
-            node->GetParent()->SetRight(pivot);
+            node->GetParent()->SetRightNode(pivot);
 
-        pivot->SetRight(node);
+        pivot->SetRightNode(node);
         node->SetParent(pivot);
 
         return pivot;
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::MoveRed2Left(Node<typeT> *node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>* RedBlackTree<typeT, lessComparator, equalComparator>::MoveRed2Left(
+        Node<typeT>* node)
+    {
         this->ChangeFamilyColor(node);
 
-        if (node->GetRight() != nullptr and node->GetRight()->GetLeft() != nullptr and node->GetRight()->GetLeft()->GetColor() == RED) {
-            node->SetRight(this->RotateRight(node->GetRight()));
+        if (node->GetRightNode() != nullptr and
+            node->GetRightNode()->GetLeftNode() != nullptr and
+            node->GetRightNode()->GetLeftNode()->GetColor() == RED)
+        {
+            node->SetRightNode(this->RotateRight(node->GetRightNode()));
             node = this->RotateLeft(node);
             this->ChangeFamilyColor(node);
         }
@@ -519,11 +622,16 @@ namespace rbtree {
         return node;
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::MoveRed2Right(Node<typeT> *node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>* RedBlackTree<typeT, lessComparator, equalComparator>::MoveRed2Right(
+        Node<typeT>* node)
+    {
         this->ChangeFamilyColor(node);
 
-        if (node->GetLeft() != nullptr and node->GetLeft()->GetLeft() != nullptr and node->GetLeft()->GetLeft()->GetColor() == RED) {
+        if (node->GetLeftNode() != nullptr and
+            node->GetLeftNode()->GetLeftNode() != nullptr and
+            node->GetLeftNode()->GetLeftNode()->GetColor() == RED)
+        {
             node = this->RotateRight(node);
             this->ChangeFamilyColor(node);
         }
@@ -531,91 +639,131 @@ namespace rbtree {
         return node;
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::ChangeFamilyColor(Node<typeT> *parent) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::ChangeFamilyColor(
+        Node<typeT>* parent)
+    {
         parent->SetColor(parent->GetColor() == BLACK ? RED : BLACK);
 
-        if (parent->GetLeft() != nullptr)
-            parent->GetLeft()->SetColor(parent->GetLeft()->GetColor() == BLACK ? RED : BLACK);
+        if (parent->GetLeftNode() != nullptr)
+            parent->GetLeftNode()->SetColor(
+                parent->GetLeftNode()->GetColor() == BLACK ? RED : BLACK);
 
-        if (parent->GetRight() != nullptr)
-            parent->GetRight()->SetColor(parent->GetRight()->GetColor() == BLACK ? RED : BLACK);
+        if (parent->GetRightNode() != nullptr)
+            parent->GetRightNode()->SetColor(
+                parent->GetRightNode()->GetColor() == BLACK ? RED : BLACK);
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::FindLeftMostNode(Node<typeT> *node) {
-        Node<typeT> *current = node;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>* RedBlackTree<typeT, lessComparator, equalComparator>::FindLeftMostNode(
+        Node<typeT>* node)
+    {
+        Node<typeT>* current = node;
 
-        while (current and current->m_left != nullptr) {
-            current = current->m_left;
-        }
+        while (current and current->GetLeftNode() != nullptr)
+            current = current->GetLeftNode();
 
         return current;
     }
 
-    template<typename typeT>
-    Node<typeT> *RedBlackTree<typeT>::DeleteLeftMostNode(Node<typeT> *node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    Node<typeT>*
+    RedBlackTree<typeT, lessComparator, equalComparator>::DeleteLeftMostNode(
+        Node<typeT>* node)
+    {
         if (node == nullptr)
             return nullptr;
 
-        if (node->GetLeft() == nullptr) {
-            Node<typeT>* rightChild = node->GetRight();
+        if (node->GetLeftNode() == nullptr)
+        {
+            Node<typeT>* rightChild = node->GetRightNode();
             delete node;
-            this->m_nodes--;
+            this->m_numNodes--;
             return rightChild;
         }
 
-        if (node->GetLeft() and node->GetLeft()->GetColor() == BLACK and node->GetLeft()->GetLeft() and node->GetLeft()->GetLeft()->GetColor() == BLACK) {
+        if (node->GetLeftNode() and node->GetLeftNode()->GetColor() == BLACK and
+            node->GetLeftNode()->GetLeftNode() and
+            node->GetLeftNode()->GetLeftNode()->GetColor() == BLACK)
+        {
             node = this->MoveRed2Left(node);
         }
 
-        node->SetLeft(DeleteLeftMostNode(node->GetLeft()));
+        node->SetLeftNode(DeleteLeftMostNode(node->GetLeftNode()));
         this->FixDelete(node);
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::Clear() {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::Clear()
+    {
         this->Clear(this->m_root);
         this->m_root = nullptr;
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::Clear(Node<typeT> *&node) {
-        if (node != nullptr) {
-            this->Clear(node->m_left);
-            this->Clear(node->m_right);
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::Clear(Node<typeT>*& node)
+    {
+        if (node != nullptr)
+        {
+
+            this->Clear(node->GetLeftNode());
+
+            this->Clear(node->GetRightNode());
+
             delete node;
-            this->m_nodes--;
+            this->m_numNodes--;
         }
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::DumpTree(std::ofstream &output) {
-        if (this->m_root != nullptr) {
-            output << this->m_root->GetKey()
-                    << ":" << this->m_root->m_color
-                    << std::endl;
-            this->DumpTree(this->m_root->m_left, "", output, true);
-            this->DumpTree(this->m_root->m_right, "", output, false);
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::DumpTree(
+        std::ofstream& output)
+    {
+        if (this->m_root != nullptr)
+        {
+            output << this->m_root->GetValue() << ":" << this->m_root->m_color
+                   << std::endl;
+            this->DumpTree(this->m_root->GetLeftNode(), "", output, true);
+            this->DumpTree(this->m_root->GetRightNode(), "", output, false);
         }
     }
 
-    template<typename typeT>
-    void RedBlackTree<typeT>::DumpTree(Node<typeT> *&node, const std::string &vBar, std::ofstream &output, bool sideIsLeft) {
-        if (node != nullptr) {
-            if (sideIsLeft) {
-                output << vBar << "├───" << node->GetKey() << ":" << node->GetColor() << std::endl;
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    void RedBlackTree<typeT, lessComparator, equalComparator>::DumpTree(
+        Node<typeT>*&      node,
+        const std::string& vBar,
+        std::ofstream&     output,
+        bool               sideIsLeft)
+    {
+        if (node != nullptr)
+        {
+            if (sideIsLeft)
+            {
+                output << vBar << "├───" << node->GetValue() << ":" << node->GetColor()
+                       << std::endl;
             }
-            else {
-                output << vBar << "└───" << node->GetKey() << ":" << node->GetColor() << std::endl;
+            else
+            {
+                output << vBar << "└───" << node->GetValue() << ":" << node->GetColor()
+                       << std::endl;
             }
-            this->DumpTree(node->m_left, vBar + (sideIsLeft ? "│    " : "     "), output, true);
-            this->DumpTree(node->m_right, vBar + (sideIsLeft ? "│    " : "     "), output, false);
+
+            this->DumpTree(node->GetLeftNode(),
+                           vBar + (sideIsLeft ? "│    " : "     "),
+                           output,
+                           true);
+
+            this->DumpTree(node->GetRightNode(),
+                           vBar + (sideIsLeft ? "│    " : "     "),
+                           output,
+                           false);
         }
     }
 
-    template<typename typeT>
-    bool RedBlackTree<typeT>::IsRedBlackTreeBalanced(Node<typeT> *&node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    bool RedBlackTree<typeT, lessComparator, equalComparator>::IsRedBlackTreeBalanced(
+        Node<typeT>*& node)
+    {
         if (node == nullptr)
             return true;
 
@@ -628,38 +776,45 @@ namespace rbtree {
             return false;
 
         // Verifica a propriedade dos filhos vermelhos
-        if (node->GetColor() == RED) {
-            if (node->GetLeft() and node->GetLeft()->GetColor() != BLACK)
+        if (node->GetColor() == RED)
+        {
+            if (node->GetLeftNode() and node->GetLeftNode()->GetColor() != BLACK)
                 return false;
 
-            if (node->GetRight() and node->GetRight()->GetColor() != BLACK)
+            if (node->GetRightNode() and node->GetRightNode()->GetColor() != BLACK)
                 return false;
         }
 
         // Verifica a propriedade dos caminhos pretos
-        int leftBlackCount = GetBlackNodeCount(node->m_left);
-        int rightBlackCount = GetBlackNodeCount(node->m_right);
+
+        std::size_t leftBlackCount  = GetBlackNodeCount(node->GetLeftNode());
+        std::size_t rightBlackCount = GetBlackNodeCount(node->GetRightNode());
+
         if (leftBlackCount != rightBlackCount)
             return false;
 
-        return IsRedBlackTreeBalanced(node->m_left) and IsRedBlackTreeBalanced(node->m_right);
+        return IsRedBlackTreeBalanced(node->GetLeftNode()) and
+               IsRedBlackTreeBalanced(node->GetRightNode());
     }
 
-    template<typename typeT>
-    int RedBlackTree<typeT>::GetBlackNodeCount(Node<typeT> *&node) {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    std::size_t RedBlackTree<typeT, lessComparator, equalComparator>::GetBlackNodeCount(
+        Node<typeT>*& node)
+    {
         if (node == nullptr)
-            return 1;  // Folhas nulas são consideradas pretas
+            return 1; // Folhas nulas são consideradas pretas
 
-        int leftCount = GetBlackNodeCount(node->m_left);
-        int rightCount = GetBlackNodeCount(node->m_right);
+        std::size_t leftCount  = GetBlackNodeCount(node->GetLeftNode());
+        std::size_t rightCount = GetBlackNodeCount(node->GetRightNode());
 
         // Incrementa o contador apenas para nós pretos
         return node->GetColor() == BLACK ? leftCount + 1 : rightCount;
     }
 
-    template<typename typeT>
-    bool RedBlackTree<typeT>::IsRedBlackTreeBalanced() {
+    template<typename typeT, typename lessComparator, typename equalComparator>
+    bool RedBlackTree<typeT, lessComparator, equalComparator>::IsRedBlackTreeBalanced()
+    {
         return this->IsRedBlackTreeBalanced(this->m_root);
     }
-}
+} // namespace rbtree
 #endif // RED_BLACK_TREE_H_

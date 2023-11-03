@@ -1,8 +1,8 @@
 /*
-* Filename: vector_excpt.h
-* Created on: June  5, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: vector_excpt.h
+ * Created on: June  5, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #ifndef VECTOR_EXCPT_H_
 #define VECTOR_EXCPT_H_
@@ -11,10 +11,12 @@
 #include <string>
 
 // vector exception namespace
-namespace vecexcpt {
-    class InvalidIndex : public std::exception {
+namespace vecexcpt
+{
+    class InvalidIndex : public std::exception
+    {
         public:
-            const char *what() const throw();
+            const char* what() const throw();
     };
 
 } // namespace vecexcpt

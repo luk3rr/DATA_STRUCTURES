@@ -1,15 +1,16 @@
 /*
-* Filename: utils.h
-* Created on: May 12, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: utils.h
+ * Created on: May 12, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #ifndef UTILS_H_
 #define UTILS_H_
 
 #include <iostream>
 
-namespace utils {
+namespace utils
+{
     void AncestorMsg(int i, int j, bool awsner);
 
     int Min(int i, int j);
@@ -24,21 +25,38 @@ namespace utils {
      * @brief Default less-than comparator
      */
     template<typename typeT>
-    struct less {
-        bool operator()(const typeT& a, const typeT& b) const {
-            return a < b;
-        }
+    struct less
+    {
+            bool operator()(const typeT& a, const typeT& b) const
+            {
+                return a < b;
+            }
     };
 
     /**
      * @brief Default greater-than comparator
      */
     template<typename typeT>
-    struct greater {
-        bool operator()(const typeT& a, const typeT& b) const {
-            return a > b;
-        }
+    struct greater
+    {
+            bool operator()(const typeT& a, const typeT& b) const
+            {
+                return a > b;
+            }
     };
+
+    /**
+     * @brief Default equal-to comparator
+     */
+    template<typename typeT>
+    struct equal
+    {
+            bool operator()(const typeT& a, const typeT& b) const
+            {
+                return a == b;
+            }
+    };
+
 } // namespace utils
 
 #endif // UTILS_H_

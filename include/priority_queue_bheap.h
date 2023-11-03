@@ -1,34 +1,44 @@
 /*
-* Filename: priority_queue_heap.h
-* Created on: July  9, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*
-* Implementation of the minimum/maximum priority queue on top of a heap.
-* Note: By default, the priority queue is minimum. To use the maximum priority queue,
-* use the Compare template
-*
-* Worst-case complexity:
-*    Enqueue: O(1 + log n) -> log n is the execution time of HeapifyDown.
-*    Dequeue: O(1 + log n) -> log n is the execution time of HeapifyUp.
-*    Peek: O(1)
-*/
+ * Filename: priority_queue_bheap.h
+ * Created on: July  9, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
-#ifndef PRIORITY_QUEUE_HEAP_H_
-#define PRIORITY_QUEUE_HEAP_H_
+#ifndef PRIORITY_QUEUE_BHEAP_H_
+#define PRIORITY_QUEUE_BHEAP_H_
 
-#include "priority_queue.h"
+#include "queue_base.h"
 #include "queue_excpt.h"
 #include "vector.h"
+#include <cstddef>
 
-// Heap namespace
-namespace heap
+// Binary heap namespace
+namespace bheap
 {
-    template <typename typeT, typename Compare = utils::less<typeT>>
-    class PriorityQueue : public PriorityQueueBase<typeT>
+    /**
+     * @brief Implementation of a priority queue on top of a binary heap structure
+     *
+     * This class implements a priority queue using a binary heap. By default, it
+     * functions as a minimum priority queue. To use it as a maximum priority queue,
+     * provide a custom comparator to the Compare template parameter
+     *
+     * Worst-case time complexities:
+     *   - Enqueue: O(1 + log n) where log n is the execution time of HeapifyDown
+     *   - Dequeue: O(1 + log n) where log n is the execution time of HeapifyUp
+     *   - Peek: O(1)
+     *
+     * @tparam typeT The type of elements stored in the priority queue
+     * @tparam Compare The custom comparator used to determine the priority of elements
+     *
+     * NOTE: By default, the 'Compare' parameter is set to 'utils::less<typeT>' for a
+     * minimum priority queue
+     */
+    template<typename typeT, typename Compare = utils::less<typeT>>
+    class PriorityQueue : public QueueBase<typeT>
     {
         private:
             Vector<typeT> m_heap;
-            Compare m_comp; // Custom comparator
+            Compare       m_comp; // Custom comparator
 
             /**
              * @brief Adjusts the heap after the removal of an element
@@ -45,7 +55,8 @@ namespace heap
         public:
             /**
              * @brief Constructor for PriorityQueue
-             * @param comp The custom comparator to use (default is the standard comparator)
+             * @param comp The custom comparator to use (default is the standard
+             * comparator)
              */
             PriorityQueue(const Compare& comp = Compare());
 
@@ -58,14 +69,16 @@ namespace heap
             void Enqueue(typeT element) override;
 
             /**
-             * @brief Get the element with the lowest priority without removing it
-             * @return The element with the lowest priority
+             * @brief Get the element with the priority value considered the lowest or
+             * highest without removing it
+             * @return The element with the lowest or highest priority value
              **/
             typeT Peek() override;
 
             /**
-             * @brief Delete the element with the lowest priority
-             * @return The element with the lowest priority
+             * @brief Remove and return the element with the priority value considered
+             * the lowest or highest
+             * @return The element with the lowest or highest priority value
              **/
             typeT Dequeue() override;
 
@@ -79,31 +92,36 @@ namespace heap
              * @brief Get the current size of the queue
              * @return The current size of the queue
              **/
-            unsigned int Size() override;
+            std::size_t Size() override;
 
             /**
-            * @brief Delete all nodes in the queue
-            **/
-            void Clear();
+             * @brief Delete all nodes in the queue
+             **/
+            void Clear() override;
     };
 
     template<typename typeT, typename Compare>
-    PriorityQueue<typeT, Compare>::PriorityQueue(const Compare& comp) : m_comp(comp) { }
+    PriorityQueue<typeT, Compare>::PriorityQueue(const Compare& comp)
+        : m_comp(comp)
+    { }
 
     template<typename typeT, typename Compare>
-    PriorityQueue<typeT, Compare>::~PriorityQueue() { }
+    PriorityQueue<typeT, Compare>::~PriorityQueue()
+    { }
 
     template<typename typeT, typename Compare>
     void PriorityQueue<typeT, Compare>::HeapifyDown(unsigned int index)
     {
-        unsigned int left = 2 * index + 1;
-        unsigned int right = 2 * index + 2;
+        unsigned int left    = 2 * index + 1;
+        unsigned int right   = 2 * index + 2;
         unsigned int largest = index;
 
-        if (left < this->m_heap.Size() and this->m_comp(this->m_heap[left], this->m_heap[largest]))
+        if (left < this->m_heap.Size() and
+            this->m_comp(this->m_heap[left], this->m_heap[largest]))
             largest = left;
 
-        if (right < this->m_heap.Size() and this->m_comp(this->m_heap[right], this->m_heap[largest]))
+        if (right < this->m_heap.Size() and
+            this->m_comp(this->m_heap[right], this->m_heap[largest]))
             largest = right;
 
         if (largest != index)
@@ -121,7 +139,7 @@ namespace heap
         while (index > 0 and this->m_comp(this->m_heap[index], this->m_heap[parent]))
         {
             this->m_heap.Swap(index, parent);
-            index = parent;
+            index  = parent;
             parent = (index - 1) / 2;
         }
     }
@@ -163,7 +181,7 @@ namespace heap
     }
 
     template<typename typeT, typename Compare>
-    unsigned int PriorityQueue<typeT, Compare>::Size()
+    std::size_t PriorityQueue<typeT, Compare>::Size()
     {
         return this->m_heap.Size();
     }
@@ -173,6 +191,6 @@ namespace heap
     {
         this->m_heap.Clear();
     }
-}
+} // namespace bheap
 
-#endif // PRIORITY_QUEUE_HEAP_H_
+#endif // PRIORITY_QUEUE_BHEAP_H_

@@ -7,6 +7,7 @@
 #ifndef PRIORITY_QUEUE_BHEAP_H_
 #define PRIORITY_QUEUE_BHEAP_H_
 
+#include "binary_heap.h"
 #include "queue_base.h"
 #include "queue_excpt.h"
 #include "vector.h"
@@ -34,23 +35,10 @@ namespace bheap
      * minimum priority queue
      */
     template<typename typeT, typename Compare = utils::less<typeT>>
-    class PriorityQueue : public QueueBase<typeT>
+    class PriorityQueue : public QueueBase<typeT>, public BinaryHeap<typeT, Compare>
     {
         private:
-            Vector<typeT> m_heap;
-            Compare       m_comp; // Custom comparator
-
-            /**
-             * @brief Adjusts the heap after the removal of an element
-             * @param index Index of the removed element
-             **/
-            void HeapifyDown(unsigned int index);
-
-            /**
-             * @brief Adjusts the heap after the insertion of an element
-             * @param index Index of the inserted element
-             **/
-            void HeapifyUp(unsigned int index);
+            using BHeap = BinaryHeap<typeT, Compare>;
 
         public:
             /**
@@ -102,7 +90,7 @@ namespace bheap
 
     template<typename typeT, typename Compare>
     PriorityQueue<typeT, Compare>::PriorityQueue(const Compare& comp)
-        : m_comp(comp)
+        : BinaryHeap<typeT, Compare>(comp)
     { }
 
     template<typename typeT, typename Compare>
@@ -110,86 +98,45 @@ namespace bheap
     { }
 
     template<typename typeT, typename Compare>
-    void PriorityQueue<typeT, Compare>::HeapifyDown(unsigned int index)
-    {
-        unsigned int left    = 2 * index + 1;
-        unsigned int right   = 2 * index + 2;
-        unsigned int largest = index;
-
-        if (left < this->m_heap.Size() and
-            this->m_comp(this->m_heap[left], this->m_heap[largest]))
-            largest = left;
-
-        if (right < this->m_heap.Size() and
-            this->m_comp(this->m_heap[right], this->m_heap[largest]))
-            largest = right;
-
-        if (largest != index)
-        {
-            this->m_heap.Swap(index, largest);
-            this->HeapifyDown(largest);
-        }
-    }
-
-    template<typename typeT, typename Compare>
-    void PriorityQueue<typeT, Compare>::HeapifyUp(unsigned int index)
-    {
-        unsigned int parent = (index - 1) / 2;
-
-        while (index > 0 and this->m_comp(this->m_heap[index], this->m_heap[parent]))
-        {
-            this->m_heap.Swap(index, parent);
-            index  = parent;
-            parent = (index - 1) / 2;
-        }
-    }
-
-    template<typename typeT, typename Compare>
     void PriorityQueue<typeT, Compare>::Enqueue(typeT element)
     {
-        this->m_heap.PushBack(element);
-        this->HeapifyUp(this->m_heap.Size() - 1);
+        BHeap::Push(element);
     }
 
     template<typename typeT, typename Compare>
     typeT PriorityQueue<typeT, Compare>::Peek()
     {
-        if (this->m_heap.IsEmpty())
+        if (BHeap::IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
-        return this->m_heap[0];
+        return BHeap::Peek();
     }
 
     template<typename typeT, typename Compare>
     typeT PriorityQueue<typeT, Compare>::Dequeue()
     {
-        if (this->m_heap.IsEmpty())
+        if (BHeap::IsEmpty())
             throw queexcpt::QueueIsEmpty();
 
-        typeT max = this->m_heap[0];
-        this->m_heap.Swap(0, this->m_heap.Size() - 1);
-        this->m_heap.PopBack();
-        this->HeapifyDown(0);
-
-        return max;
+        return BHeap::Pop();
     }
 
     template<typename typeT, typename Compare>
     bool PriorityQueue<typeT, Compare>::IsEmpty()
     {
-        return this->m_heap.IsEmpty();
+        return BHeap::IsEmpty();
     }
 
     template<typename typeT, typename Compare>
     std::size_t PriorityQueue<typeT, Compare>::Size()
     {
-        return this->m_heap.Size();
+        return BHeap::Size();
     }
 
     template<typename typeT, typename Compare>
     void PriorityQueue<typeT, Compare>::Clear()
     {
-        this->m_heap.Clear();
+        return BHeap::Clear();
     }
 } // namespace bheap
 

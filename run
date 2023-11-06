@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import argparse
+import shutil
+
+build_dir = "build"
+bin_dir = "bin"
+program_name = "program"
+unit_test_name = "unit_test"
+
+def cmake_build():
+    if not os.path.exists(build_dir):
+        os.makedirs(build_dir)
+
+    current_dir = os.getcwd()
+    os.chdir(build_dir)
+
+    cmake_command = "cmake .."
+    subprocess.run(cmake_command, shell=True, check=True)
+
+    build_command = "cmake --build ."
+    subprocess.run(build_command, shell=True, check=True)
+
+    os.chdir(current_dir)
+
+def cmake_exec():
+    cmake_build()
+
+    exec_command = f"{bin_dir}/{program_name}"
+    subprocess.run(exec_command, shell=True, check=True)
+
+
+def cmake_unit_tests():
+    cmake_build()
+
+    exec_command = f"{bin_dir}/{unit_test_name}"
+    subprocess.run(exec_command, shell=True, check=True)
+
+def clean_cmake_artifacts(project_path=None):
+    if project_path is None:
+        project_path = os.getcwd()
+
+    out_dir = os.path.join(project_path, "build")
+    lock_file = os.path.join(project_path, "build.lock")
+
+    if not os.path.exists(out_dir) and not os.path.exists(lock_file):
+        print("Nenhum artefato do CMake encontrado para limpar.")
+        return
+
+    if os.path.exists(lock_file):
+        os.remove(lock_file)
+
+    if os.path.exists(out_dir):
+        for item in os.listdir(out_dir):
+            item_path = os.path.join(out_dir, item)
+
+            if item != ".gitkeep":
+                if os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+                else:
+                    os.remove(item_path)
+
+    print(f"Cleaning CMake artifacts for project in: {project_path}")
+    print(f"Removing output directory: {out_dir}")
+    print(f"Removing lock file: {lock_file}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CMake Build, Execute, or Clean")
+    parser.add_argument("--build", action="store_true", help="Run CMake build")
+    parser.add_argument("--run", action="store_true", help="Run CMake execute")
+    parser.add_argument("--clean", action="store_true", help="Clean CMake artifacts")
+    parser.add_argument("--test", action="store_true", help="Run CMake unit tests")
+
+    args = parser.parse_args()
+
+    if args.build:
+        cmake_build()
+    elif args.run:
+        cmake_exec()
+    elif args.clean:
+        clean_cmake_artifacts()
+    elif args.test:
+        cmake_unit_tests()
+    else:
+        print("Use --build, --run, or --clean as command-line options.")
+
+
+if __name__ == "__main__":
+    main()

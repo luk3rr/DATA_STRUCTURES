@@ -211,7 +211,7 @@ template<typename typeT>
 BinaryTree<typeT>::BinaryTree()
 {
     this->m_root  = nullptr;
-    this->m_nodes = 0;
+    this->m_numNodes = 0;
 }
 
 template<typename typeT>
@@ -223,14 +223,14 @@ BinaryTree<typeT>::~BinaryTree()
 template<typename typeT>
 dlkd::Node<typeT>* BinaryTree<typeT>::Search(dlkd::Node<typeT>* node, typeT key)
 {
-    if (node == nullptr or key == node->m_key)
+    if (node == nullptr or key == node->GetValue())
         return node;
 
-    if (key < node->m_key)
-        return this->Search(node->GetLeftNode, key);
+    if (key < node->GetValue())
+        return this->Search(node->GetLeftNode(), key);
 
     else
-        return this->Search(node->GetRightNode, key);
+        return this->Search(node->GetRightNode(), key);
 }
 
 template<typename typeT>
@@ -239,17 +239,17 @@ void BinaryTree<typeT>::Insert(typeT key)
     if (this->m_root == nullptr)
     {
         this->m_root = new dlkd::Node<typeT>(key);
-        this->m_nodes++;
+        this->m_numNodes++;
     }
     else
     {
-        if (key < this->m_root->m_key)
+        if (key < this->m_root->GetValue())
         {
-            this->Insert(this->m_root->GetLeftNode, key);
+            this->Insert(this->m_root->GetLeftNode(), key);
         }
         else
         {
-            this->Insert(this->m_root->GetRightNode, key);
+            this->Insert(this->m_root->GetRightNode(), key);
         }
     }
 }
@@ -260,17 +260,17 @@ void BinaryTree<typeT>::Insert(dlkd::Node<typeT>*& node, typeT key)
     if (node == nullptr)
     {
         node = new dlkd::Node<typeT>(key);
-        this->m_nodes++;
+        this->m_numNodes++;
     }
     else
     {
-        if (key < node->m_key)
+        if (key < node->GetValue())
         {
-            this->Insert(node->GetLeftNode, key);
+            this->Insert(node->GetLeftNode(), key);
         }
         else
         {
-            this->Insert(node->GetRightNode, key);
+            this->Insert(node->GetRightNode(), key);
         }
     }
 }
@@ -287,8 +287,8 @@ void BinaryTree<typeT>::DeleteTree(dlkd::Node<typeT>* node)
 {
     if (node != nullptr)
     {
-        this->DeleteTree(node->GetLeftNode);
-        this->DeleteTree(node->GetRightNode);
+        this->DeleteTree(node->GetLeftNode());
+        this->DeleteTree(node->GetRightNode());
         delete node;
     }
 }
@@ -298,9 +298,9 @@ void BinaryTree<typeT>::InorderTreeWalk(slkd::Queue<typeT>& walk)
 {
     if (this->m_root != nullptr)
     {
-        this->InorderTreeWalk(walk, this->m_root->GetLeftNode);
-        walk.Enqueue(this->m_root->m_key);
-        this->InorderTreeWalk(walk, this->m_root->GetRightNode);
+        this->InorderTreeWalk(walk, this->m_root->GetLeftNode());
+        walk.Enqueue(this->m_root->GetValue());
+        this->InorderTreeWalk(walk, this->m_root->GetRightNode());
     }
 }
 
@@ -310,9 +310,9 @@ void BinaryTree<typeT>::InorderTreeWalk(slkd::Queue<typeT>& walk,
 {
     if (node != nullptr)
     {
-        this->InorderTreeWalk(walk, node->GetLeftNode);
-        walk.Enqueue(node->m_key);
-        this->InorderTreeWalk(walk, node->GetRightNode);
+        this->InorderTreeWalk(walk, node->GetLeftNode());
+        walk.Enqueue(node->GetValue());
+        this->InorderTreeWalk(walk, node->GetRightNode());
     }
 }
 
@@ -321,9 +321,9 @@ void BinaryTree<typeT>::PreorderTreeWalk(slkd::Queue<typeT>& walk)
 {
     if (this->m_root != nullptr)
     {
-        walk.Enqueue(this->m_root->m_key);
-        this->PreorderTreeWalk(walk, this->m_root->GetLeftNode);
-        this->PreorderTreeWalk(walk, this->m_root->GetRightNode);
+        walk.Enqueue(this->m_root->GetValue());
+        this->PreorderTreeWalk(walk, this->m_root->GetLeftNode());
+        this->PreorderTreeWalk(walk, this->m_root->GetRightNode());
     }
 }
 
@@ -333,9 +333,9 @@ void BinaryTree<typeT>::PreorderTreeWalk(slkd::Queue<typeT>& walk,
 {
     if (node != nullptr)
     {
-        walk.Enqueue(node->m_key);
-        this->PreorderTreeWalk(walk, node->GetLeftNode);
-        this->PreorderTreeWalk(walk, node->GetRightNode);
+        walk.Enqueue(node->GetValue());
+        this->PreorderTreeWalk(walk, node->GetLeftNode());
+        this->PreorderTreeWalk(walk, node->GetRightNode());
     }
 }
 
@@ -344,9 +344,9 @@ void BinaryTree<typeT>::PostorderTreeWalk(slkd::Queue<typeT>& walk)
 {
     if (this->m_root != nullptr)
     {
-        this->PostorderTreeWalk(walk, this->m_root->GetLeftNode);
-        this->PostorderTreeWalk(walk, this->m_root->GetRightNode);
-        walk.Enqueue(this->m_root->m_key);
+        this->PostorderTreeWalk(walk, this->m_root->GetLeftNode());
+        this->PostorderTreeWalk(walk, this->m_root->GetRightNode());
+        walk.Enqueue(this->m_root->GetValue());
     }
 }
 
@@ -356,9 +356,9 @@ void BinaryTree<typeT>::PostorderTreeWalk(slkd::Queue<typeT>& walk,
 {
     if (node != nullptr)
     {
-        this->PostorderTreeWalk(walk, node->GetLeftNode);
-        this->PostorderTreeWalk(walk, node->GetRightNode);
-        walk.Enqueue(node->m_key);
+        this->PostorderTreeWalk(walk, node->GetLeftNode());
+        this->PostorderTreeWalk(walk, node->GetRightNode());
+        walk.Enqueue(node->GetValue());
     }
 }
 
@@ -375,9 +375,9 @@ void BinaryTree<typeT>::LevelorderTreeWalk()
         node = queue.Dequeue();
         if (node != nullptr)
         {
-            std::cout << node->m_key << " ";
-            queue.Enqueue(node->GetLeftNode);
-            queue.Enqueue(node->GetRightNode);
+            std::cout << node->GetValue() << " ";
+            queue.Enqueue(node->GetLeftNode());
+            queue.Enqueue(node->GetRightNode());
         }
     }
 }
@@ -395,9 +395,9 @@ void BinaryTree<typeT>::LevelorderTreeWalk(slkd::Queue<typeT>& walk)
         node = queue.Dequeue();
         if (node != nullptr)
         {
-            walk.Enqueue(node->m_key);
-            queue.Enqueue(node->GetLeftNode);
-            queue.Enqueue(node->GetRightNode);
+            walk.Enqueue(node->GetValue());
+            queue.Enqueue(node->GetLeftNode());
+            queue.Enqueue(node->GetRightNode());
         }
     }
 }
@@ -408,22 +408,22 @@ bool BinaryTree<typeT>::IsAncestorRecursive(typeT i, typeT j)
     if (this->m_root == nullptr)
         return false;
 
-    if (i == this->m_root->m_key)
+    if (i == this->m_root->GetValue())
         return true;
 
-    if (j == this->m_root->m_key)
+    if (j == this->m_root->GetValue())
         return false;
 
     if (i == j)
         return false;
 
-    if (utils::Min(i, j) < this->m_root->m_key and utils::Max(i, j) > this->_root->key)
+    if (utils::Min(i, j) < this->m_root->GetValue() and utils::Max(i, j) > this->_root->key)
         return false;
 
-    else if (i < this->m_root->m_key and j < this->_root->key)
-        return this->IsAncestorRecursive(this->m_root->GetLeftNode, i, j);
+    else if (i < this->m_root->GetValue() and j < this->_root->key)
+        return this->IsAncestorRecursive(this->m_root->GetLeftNode(), i, j);
     else
-        return this->IsAncestorRecursive(this->m_root->GetRightNode, i, j);
+        return this->IsAncestorRecursive(this->m_root->GetRightNode(), i, j);
 }
 
 template<typename typeT>
@@ -432,22 +432,22 @@ bool BinaryTree<typeT>::IsAncestorRecursive(dlkd::Node<typeT>* node, typeT i, ty
     if (node == nullptr)
         return false;
 
-    if (i == node->m_key)
+    if (i == node->GetValue())
         return true;
 
-    if (j == node->m_key)
+    if (j == node->GetValue())
         return false;
 
     if (i == j)
         return false;
 
-    if (utils::Min(i, j) < node->m_key and utils::Max(i, j) > node->key)
+    if (utils::Min(i, j) < node->GetValue() and utils::Max(i, j) > node->key)
         return false;
 
-    else if (i < node->m_key and j < node->key)
-        return this->IsAncestorRecursive(node->GetLeftNode, i, j);
+    else if (i < node->GetValue() and j < node->key)
+        return this->IsAncestorRecursive(node->GetLeftNode(), i, j);
     else
-        return this->IsAncestorRecursive(node->GetRightNode, i, j);
+        return this->IsAncestorRecursive(node->GetRightNode(), i, j);
 }
 
 template<typename typeT>
@@ -464,7 +464,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
     slkd::Queue<typeT> levelOrder;
     this->LevelorderTreeWalk(levelOrder);
 
-    for (int k = 0; k < this->m_nodes; k++)
+    for (int k = 0; k < this->m_numNodes; k++)
     {
         if (k == 0)
         {
@@ -536,7 +536,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
 template<typename typeT>
 std::size_t BinaryTree<typeT>::KeyPosition(typeT (&array)[], int key)
 {
-    for (int i = 0; i < this->m_nodes; i++)
+    for (int i = 0; i < this->m_numNodes; i++)
     {
         if (array[i] == key)
             return i;
@@ -556,11 +556,11 @@ bool BinaryTree<typeT>::IsAncestor(typeT i, typeT j)
     this->PreorderTreeWalk(preorder);
     this->PostorderTreeWalk(postorder);
 
-    typeT inorderArray[this->m_nodes];
-    typeT preorderArray[this->m_nodes];
-    typeT postorderArray[this->m_nodes];
+    typeT inorderArray[this->m_numNodes];
+    typeT preorderArray[this->m_numNodes];
+    typeT postorderArray[this->m_numNodes];
 
-    for (int i = 0; i < this->m_nodes; i++)
+    for (int i = 0; i < this->m_numNodes; i++)
     {
         inorderArray[i]   = inorder.Dequeue();
         preorderArray[i]  = preorder.Dequeue();
@@ -619,25 +619,25 @@ void BinaryTree<typeT>::DumpTree(std::ofstream& output)
 
     if (this->m_root != nullptr)
     {
-        output << this->m_root->m_key;
+        output << this->m_root->GetValue();
         output << "(";
         output << level;
         output << ")" << std::endl;
-        this->DumpTree(this->m_root->GetLeftNode, level + 1, "", output, true);
-        this->DumpTree(this->m_root->GetRightNode, level + 1, "", output, false);
+        this->DumpTree(this->m_root->GetLeftNode(), level + 1, "", output, true);
+        this->DumpTree(this->m_root->GetRightNode(), level + 1, "", output, false);
     }
 }
 
 template<typename typeT>
 void BinaryTree<typeT>::InsertExistingTree(dlkd::Node<typeT>* root, int nodes)
 {
-    if (this->m_root != nullptr and this->m_nodes == 0)
+    if (this->m_root != nullptr and this->m_numNodes == 0)
         throw bntexcpt::TreeIsNotEmpty();
 
     if (root == nullptr or nodes < 1)
         throw bntexcpt::NewTreeIsEmpty();
 
-    this->m_nodes = nodes + 1;
+    this->m_numNodes = nodes + 1;
     this->m_root  = root;
 }
 
@@ -652,18 +652,18 @@ void BinaryTree<typeT>::DumpTree(dlkd::Node<typeT>*& node,
     {
         if (sideIsLeft)
         {
-            output << vBar << "├───" << node->m_key << "(" << level << ")" << std::endl;
+            output << vBar << "├───" << node->GetValue() << "(" << level << ")" << std::endl;
         }
         else
         {
-            output << vBar << "└───" << node->m_key << "(" << level << ")" << std::endl;
+            output << vBar << "└───" << node->GetValue() << "(" << level << ")" << std::endl;
         }
-        this->DumpTree(node->GetLeftNode,
+        this->DumpTree(node->GetLeftNode(),
                        level + 1,
                        vBar + (sideIsLeft ? "│    " : "     "),
                        output,
                        true);
-        this->DumpTree(node->GetRightNode,
+        this->DumpTree(node->GetRightNode(),
                        level + 1,
                        vBar + (sideIsLeft ? "│    " : "     "),
                        output,

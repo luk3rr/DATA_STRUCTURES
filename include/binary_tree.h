@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 #include "binary_tree_excpt.h"
 #include "node.h"
@@ -210,7 +211,7 @@ class BinaryTree
 template<typename typeT>
 BinaryTree<typeT>::BinaryTree()
 {
-    this->m_root  = nullptr;
+    this->m_root     = nullptr;
     this->m_numNodes = 0;
 }
 
@@ -417,7 +418,8 @@ bool BinaryTree<typeT>::IsAncestorRecursive(typeT i, typeT j)
     if (i == j)
         return false;
 
-    if (utils::Min(i, j) < this->m_root->GetValue() and utils::Max(i, j) > this->_root->key)
+    if (utils::Min(i, j) < this->m_root->GetValue() and
+        utils::Max(i, j) > this->_root->key)
         return false;
 
     else if (i < this->m_root->GetValue() and j < this->_root->key)
@@ -472,7 +474,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
             {
                 root_aux = levelOrder.Dequeue();
             }
-            catch (queexcpt::QueueIsEmpty& e)
+            catch (std::underflow_error& e)
             {
                 std::cout << e.what() << std::endl;
                 break;
@@ -509,7 +511,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
                 } while (tmp > root_aux);
                 root_aux = tmp;
             }
-            catch (queexcpt::QueueIsEmpty& e)
+            catch (std::underflow_error& e)
             {
                 return false;
             }
@@ -524,7 +526,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
                 } while (tmp < root_aux);
                 root_aux = tmp;
             }
-            catch (queexcpt::QueueIsEmpty& e)
+            catch (std::underflow_error& e)
             {
                 return false;
             }
@@ -638,7 +640,7 @@ void BinaryTree<typeT>::InsertExistingTree(dlkd::Node<typeT>* root, int nodes)
         throw bntexcpt::NewTreeIsEmpty();
 
     this->m_numNodes = nodes + 1;
-    this->m_root  = root;
+    this->m_root     = root;
 }
 
 template<typename typeT>
@@ -652,11 +654,13 @@ void BinaryTree<typeT>::DumpTree(dlkd::Node<typeT>*& node,
     {
         if (sideIsLeft)
         {
-            output << vBar << "├───" << node->GetValue() << "(" << level << ")" << std::endl;
+            output << vBar << "├───" << node->GetValue() << "(" << level << ")"
+                   << std::endl;
         }
         else
         {
-            output << vBar << "└───" << node->GetValue() << "(" << level << ")" << std::endl;
+            output << vBar << "└───" << node->GetValue() << "(" << level << ")"
+                   << std::endl;
         }
         this->DumpTree(node->GetLeftNode(),
                        level + 1,

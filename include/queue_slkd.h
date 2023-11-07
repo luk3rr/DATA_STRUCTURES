@@ -7,10 +7,11 @@
 #ifndef QUEUE_SLKD_H_
 #define QUEUE_SLKD_H_
 
+#include <cstddef>
+#include <stdexcept>
+
 #include "node.h"
 #include "queue_base.h"
-#include "queue_excpt.h"
-#include <cstddef>
 
 // Singly linked namespace
 namespace slkd
@@ -38,7 +39,7 @@ namespace slkd
 
             /**
              * @brief Deletes the first node from the queue
-             * @throw queexcpt::QueueIsEmpty If the queue is empty
+             * @throw std::underflow_error If queue is empty
              */
             void DeleteFirst();
 
@@ -56,12 +57,14 @@ namespace slkd
             /**
              * @brief Get the element at the front of the queue
              * @return The element at the front of the queue
+             * @throw std::overflow_error If queue is empty
              **/
             typeT Peek() override;
 
             /**
              * @brief Remove and return the element at the front of the queue
              * @return The element at the front of the queue
+             * @throw std::underflow_error If queue is empty
              **/
             typeT Dequeue() override;
 
@@ -116,7 +119,7 @@ namespace slkd
     typeT Queue<typeT>::Peek()
     {
         if (this->IsEmpty())
-            throw queexcpt::QueueIsEmpty();
+            throw std::overflow_error("Queue is empty!");
 
         return this->m_first->GetValue();
     }
@@ -125,7 +128,7 @@ namespace slkd
     typeT Queue<typeT>::Dequeue()
     {
         if (this->IsEmpty())
-            throw queexcpt::QueueIsEmpty();
+            throw std::underflow_error("Queue is empty!");
 
         typeT element = this->m_first->GetValue();
         this->DeleteFirst();
@@ -157,7 +160,7 @@ namespace slkd
     void Queue<typeT>::DeleteFirst()
     {
         if (this->IsEmpty())
-            throw queexcpt::QueueIsEmpty();
+            throw std::underflow_error("Queue is empty!");
 
         Node<typeT>* toDelete = this->m_first;
         this->m_first         = this->m_first->GetNextNode();

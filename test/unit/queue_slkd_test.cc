@@ -7,9 +7,10 @@
 #include <ctime>
 #include <cstdlib>
 #include <random>
+#include <stdexcept>
 
 #include "doctest.h"
-#include "queue_excpt.h"
+
 #include "queue_slkd.h"
 
 #define QUEUE_MAX_LENGTH_TEST 10000
@@ -52,6 +53,6 @@ TEST_CASE("Lançamento de exceções") {
     slkd::Queue<float> queue;
 
     SUBCASE("Desenfileirar fila vazia") {
-        CHECK_THROWS_AS(queue.Dequeue(), queexcpt::QueueIsEmpty);
+        CHECK_THROWS_AS(queue.Dequeue(), std::underflow_error);
     }
 }

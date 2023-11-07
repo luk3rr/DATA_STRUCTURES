@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "tuple_excpt.h"
 #include "vector.h"
 
 /**

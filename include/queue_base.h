@@ -7,8 +7,9 @@
 #ifndef QUEUE_BASE_H_
 #define QUEUE_BASE_H_
 
-#include "utils.h"
 #include <cstddef>
+
+#include "utils.h"
 
 /**
  * @brief Base class for Queue

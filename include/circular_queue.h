@@ -7,9 +7,10 @@
 #ifndef CIRCULAR_QUEUE_H_
 #define CIRCULAR_QUEUE_H_
 
-#include "queue_base.h"
-#include "queue_excpt.h"
 #include <cstddef>
+#include <stdexcept>
+
+#include "queue_base.h"
 
 #define CIRCULAR_QUEUE_MAX_SIZE 1000
 
@@ -37,18 +38,21 @@ class CircularQueue : QueueBase<typeT>
         /**
          * @brief Insert a new element into the queue
          * @param element New element
+         * @throw std::overflow_error If queue max size exceded
          **/
         void Enqueue(typeT element) override;
 
         /**
          * @brief Get the element at the front of the queue
          * @return The element at the front of the queue
+         * @throw std::overflow_error If queue is empty
          **/
         typeT Peek() override;
 
         /**
          * @brief Remove and return the element at the front of the queue
          * @return The element at the front of the queue
+         * @throw std::underflow_error If queue is empty
          **/
         typeT Dequeue() override;
 
@@ -84,7 +88,7 @@ template<typename typeT>
 void CircularQueue<typeT>::Enqueue(typeT item)
 {
     if (this->m_size == CIRCULAR_QUEUE_MAX_SIZE)
-        throw queexcpt::QueueOverflow();
+        throw std::overflow_error("Queue max size exceded!");
 
     this->m_queue[this->m_back] = item;
 
@@ -96,7 +100,7 @@ template<typename typeT>
 typeT CircularQueue<typeT>::Peek()
 {
     if (this->IsEmpty())
-        throw queexcpt::QueueIsEmpty();
+        throw std::overflow_error("Queue is empty!");
 
     return this->m_queue[this->m_front];
 }
@@ -105,7 +109,7 @@ template<typename typeT>
 typeT CircularQueue<typeT>::Dequeue()
 {
     if (this->IsEmpty())
-        throw queexcpt::QueueIsEmpty();
+        throw std::underflow_error("Queue is empty!");
 
     typeT element = this->m_queue[this->m_front];
     this->m_front = (this->m_front + 1) % CIRCULAR_QUEUE_MAX_SIZE;

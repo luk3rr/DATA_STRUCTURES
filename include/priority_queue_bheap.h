@@ -7,11 +7,12 @@
 #ifndef PRIORITY_QUEUE_BHEAP_H_
 #define PRIORITY_QUEUE_BHEAP_H_
 
+#include <cstddef>
+#include <stdexcept>
+
 #include "binary_heap.h"
 #include "queue_base.h"
-#include "queue_excpt.h"
 #include "vector.h"
-#include <cstddef>
 
 // Binary heap namespace
 namespace bheap
@@ -60,6 +61,7 @@ namespace bheap
              * @brief Get the element with the priority value considered the lowest or
              * highest without removing it
              * @return The element with the lowest or highest priority value
+             * @throw std::overflow_error If queue is empty
              **/
             typeT Peek() override;
 
@@ -67,6 +69,7 @@ namespace bheap
              * @brief Remove and return the element with the priority value considered
              * the lowest or highest
              * @return The element with the lowest or highest priority value
+             * @throw std::underflow_error If queue is empty
              **/
             typeT Dequeue() override;
 
@@ -107,7 +110,7 @@ namespace bheap
     typeT PriorityQueue<typeT, Compare>::Peek()
     {
         if (BHeap::IsEmpty())
-            throw queexcpt::QueueIsEmpty();
+            throw std::overflow_error("Queue is empty!");
 
         return BHeap::Peek();
     }
@@ -116,7 +119,7 @@ namespace bheap
     typeT PriorityQueue<typeT, Compare>::Dequeue()
     {
         if (BHeap::IsEmpty())
-            throw queexcpt::QueueIsEmpty();
+            throw std::underflow_error("Queue is empty!");
 
         return BHeap::Pop();
     }

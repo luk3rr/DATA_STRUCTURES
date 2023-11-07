@@ -4,8 +4,9 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
-#include "binary_heap.h"
 #include "doctest.h"
+
+#include "binary_heap.h"
 #include "priority_queue_bheap.h"
 #include "utils.h"
 

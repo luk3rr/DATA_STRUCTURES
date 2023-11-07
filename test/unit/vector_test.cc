@@ -5,7 +5,10 @@
 */
 
 #include <cstddef>
+#include <stdexcept>
+
 #include "doctest.h"
+
 #include "vector.h"
 
 #define VECTOR_TEST_MAX_SIZE 1000
@@ -29,7 +32,7 @@ TEST_CASE("Redimensionamento manual do vector") {
     REQUIRE(vector.GetMaxSize() == 10);
 
     CHECK(vector[5] == 0); // Resize deve preencher o array com 0
-    CHECK_THROWS_AS(vector.At(newSize + 1), vecexcpt::InvalidIndex);
+    CHECK_THROWS_AS(vector.At(newSize + 1), std::out_of_range);
 
     for (unsigned int i = 0; i < newSize; i++) {
         vector[i] = i;

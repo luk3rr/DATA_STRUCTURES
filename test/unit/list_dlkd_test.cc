@@ -8,10 +8,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <stdexcept>
 
 #include "doctest.h"
+
 #include "list_dlkd.h"
-#include "list_excpt.h"
 
 TEST_CASE("Remover elemento")
 {
@@ -67,8 +68,8 @@ TEST_CASE("Lançamento de exceções para lista vazia")
     list.PushBack(3);
     list.PushBack(4);
     list.Clear();
-    CHECK_THROWS_AS(list.Front(), lstexcpt::ListIsEmpty);
-    CHECK_THROWS_AS(list.Back(), lstexcpt::ListIsEmpty);
+    CHECK_THROWS_AS(list.Front(), std::overflow_error);
+    CHECK_THROWS_AS(list.Back(), std::overflow_error);
 }
 
 TEST_CASE("Iterator")

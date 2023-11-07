@@ -7,10 +7,11 @@
 #ifndef PRIORITY_QUEUE_SLKD_H_
 #define PRIORITY_QUEUE_SLKD_H_
 
+#include <cstddef>
+#include <stdexcept>
+
 #include "node.h"
 #include "queue_base.h"
-#include "queue_excpt.h"
-#include <cstddef>
 
 // Singly linked namespace
 namespace slkd
@@ -66,6 +67,7 @@ namespace slkd
              * @brief Get the element with the priority value considered the lowest or
              * highest without removing it
              * @return The element with the lowest or highest priority value
+             * @throw std::overflow_error If priority queue is empty
              **/
             typeT Peek() override;
 
@@ -73,6 +75,7 @@ namespace slkd
              * @brief Remove and return the element with the priority value considered
              * the lowest or highest
              * @return The element with the lowest or highest priority value
+             * @throw std::underflow_error If priority queue is empty
              **/
             typeT Dequeue() override;
 
@@ -139,7 +142,7 @@ namespace slkd
     typeT PriorityQueue<typeT, Compare>::Peek()
     {
         if (this->m_size == 0)
-            throw queexcpt::QueueIsEmpty();
+            throw std::overflow_error("Priority Queue is empty!");
 
         return this->m_head->GetValue();
     }
@@ -148,7 +151,7 @@ namespace slkd
     typeT PriorityQueue<typeT, Compare>::Dequeue()
     {
         if (this->m_size == 0)
-            throw queexcpt::QueueIsEmpty();
+            throw std::underflow_error("Priority Queue is empty!");
 
         typeT aux = this->m_head->GetValue();
         RemoveHead();

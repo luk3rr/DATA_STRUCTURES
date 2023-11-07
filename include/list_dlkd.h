@@ -9,8 +9,8 @@
 
 #include <cstddef>
 #include <iostream>
+#include <stdexcept>
 
-#include "list_excpt.h"
 #include "node.h"
 
 // Doubly linked namespace
@@ -112,12 +112,14 @@ namespace dlkd
             /**
              * @brief Return the first element of the list
              * @return The key of the first element of the list
+             * @throw std::overflow_error If list is empty
              */
             typeT Front();
 
             /**
              * @brief Return the last element of the list
              * @return The key of the last element of the list
+             * @throw std::overflow_error If list is empty
              */
             typeT Back();
 
@@ -329,7 +331,7 @@ namespace dlkd
     typeT List<typeT>::Front()
     {
         if (this->IsEmpty())
-            throw lstexcpt::ListIsEmpty();
+            throw std::overflow_error("List is empty!");
 
         return this->m_head->GetValue();
     }
@@ -338,7 +340,7 @@ namespace dlkd
     typeT List<typeT>::Back()
     {
         if (this->IsEmpty())
-            throw lstexcpt::ListIsEmpty();
+            throw std::overflow_error("List is empty!");
 
         return this->m_tail->GetValue();
     }

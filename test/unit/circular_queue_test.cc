@@ -7,9 +7,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <stdexcept>
+
+#include "doctest.h"
 
 #include "circular_queue.h"
-#include "doctest.h"
 
 #define QUEUE_MIN_LENGTH_TEST 10
 
@@ -56,7 +58,7 @@ TEST_CASE("Lançamento de exceções")
 
     SUBCASE("Desenfileirar fila vazia")
     {
-        CHECK_THROWS_AS(fila.Dequeue(), queexcpt::QueueIsEmpty);
+        CHECK_THROWS_AS(fila.Dequeue(), std::underflow_error);
     }
 
     SUBCASE("Exceder limite da fila")
@@ -65,6 +67,6 @@ TEST_CASE("Lançamento de exceções")
         {
             fila.Enqueue(i);
         }
-        CHECK_THROWS_AS(fila.Enqueue(333), queexcpt::QueueOverflow);
+        CHECK_THROWS_AS(fila.Enqueue(333), std::overflow_error);
     }
 }

@@ -4,10 +4,12 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
-#include "doctest.h"
-#include "node.h"
 #include <cmath>
 #include <cstdint>
+
+#include "doctest.h"
+
+#include "node.h"
 
 TEST_CASE("slkd::Node Tests")
 {

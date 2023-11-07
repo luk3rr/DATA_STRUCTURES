@@ -7,9 +7,10 @@
 #ifndef STACK_SLKD_H_
 #define STACK_SLKD_H_
 
-#include "node.h"
-#include "stack_excpt.h"
 #include <cstddef>
+#include <stdexcept>
+
+#include "node.h"
 
 // Singly linked namespace
 namespace slkd
@@ -37,7 +38,7 @@ namespace slkd
 
             /**
              * @brief Deletes the top element of the stack.
-             * @throw queexcpt::StackIsEmpty If the stack is empty.
+             * @throw std::underflow_error If the stack is empty.
              */
             void DeleteTop();
 
@@ -55,13 +56,14 @@ namespace slkd
             /**
              * @brief Return the element at the top of the stack without popping it
              * @return The element at the top of the stack
+             * @throw std::overflow_error If the stack is empty.
              */
             typeT Peek();
 
             /**
              * @brief Pop an element from the stack
              * @return The element at the top of the stack
-             * @throw queexcpt::StackIsEmpty If the stack is empty
+             * @throw std::underflow_error If the stack is empty.
              */
             typeT Pop();
 
@@ -117,7 +119,7 @@ namespace slkd
     typeT Stack<typeT>::Peek()
     {
         if (this->IsEmpty())
-            throw stkexcpt::StackIsEmpty();
+            throw std::overflow_error("Stack is empty!");
 
         return this->m_top->GetValue();
     }
@@ -126,7 +128,7 @@ namespace slkd
     typeT Stack<typeT>::Pop()
     {
         if (this->IsEmpty())
-            throw stkexcpt::StackIsEmpty();
+            throw std::underflow_error("Stack is empty!");
 
         typeT element = this->m_top->GetValue();
         this->DeleteTop();
@@ -158,7 +160,7 @@ namespace slkd
     void Stack<typeT>::DeleteTop()
     {
         if (this->IsEmpty())
-            throw stkexcpt::StackIsEmpty();
+            throw std::underflow_error("Stack is empty!");
 
         Node<typeT>* toDelete = this->m_top;
         this->m_top           = this->m_top->GetNextNode();

@@ -4,10 +4,11 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
+#include <string>
+
 #include "doctest.h"
 
 #include "tuple.h"
-#include <string>
 
 TEST_CASE("Tuple with two elements")
 {

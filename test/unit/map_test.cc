@@ -4,9 +4,11 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
-#include "doctest.h"
-#include "map.h"
 #include <cstdint>
+
+#include "doctest.h"
+
+#include "map.h"
 
 TEST_CASE("Inserção e busca")
 {

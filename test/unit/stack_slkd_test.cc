@@ -7,10 +7,11 @@
 #include <ctime>
 #include <cstdlib>
 #include <random>
+#include <stdexcept>
 
 #include "doctest.h"
+
 #include "stack_slkd.h"
-#include "stack_excpt.h"
 
 #define STACK_MAX_LENGTH_TEST 10000
 #define STACK_MIN_LENGTH_TEST 10
@@ -53,11 +54,11 @@ TEST_CASE("Lançamento de exceções") {
     slkd::Stack<float> pilha;
 
     SUBCASE("Desempilhar pilha vazia") {
-        CHECK_THROWS_AS(pilha.Pop(), stkexcpt::StackIsEmpty);
+        CHECK_THROWS_AS(pilha.Pop(), std::underflow_error);
     }
 
     SUBCASE("Espiar elemento no topo de uma pilha vazia") {
-        CHECK_THROWS_AS(pilha.Peek(), stkexcpt::StackIsEmpty);
+        CHECK_THROWS_AS(pilha.Peek(), std::overflow_error);
     }
 }
 

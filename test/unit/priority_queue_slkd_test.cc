@@ -4,7 +4,10 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
+#include <stdexcept>
+
 #include "doctest.h"
+
 #include "priority_queue_slkd.h"
 #include "utils.h"
 
@@ -14,8 +17,8 @@ TEST_CASE("Max Priority Queue: Inserir/Remover elemento")
 
     SUBCASE("Caso 1: Lista vazia")
     {
-        CHECK_THROWS_AS(pqueue.Peek(), queexcpt::QueueIsEmpty);
-        CHECK_THROWS_AS(pqueue.Dequeue(), queexcpt::QueueIsEmpty);
+        CHECK_THROWS_AS(pqueue.Peek(), std::overflow_error);
+        CHECK_THROWS_AS(pqueue.Dequeue(), std::underflow_error);
     }
 
     SUBCASE("Caso 2: Lista de tamanho 1")
@@ -54,8 +57,8 @@ TEST_CASE("Min Priority Queue: Inserir/Remover elemento")
 
     SUBCASE("Caso 1: Lista vazia")
     {
-        CHECK_THROWS_AS(pqueue.Peek(), queexcpt::QueueIsEmpty);
-        CHECK_THROWS_AS(pqueue.Dequeue(), queexcpt::QueueIsEmpty);
+        CHECK_THROWS_AS(pqueue.Peek(), std::overflow_error);
+        CHECK_THROWS_AS(pqueue.Dequeue(), std::underflow_error);
     }
 
     SUBCASE("Caso 2: Lista de tamanho 1")

@@ -5,6 +5,7 @@
 */
 
 #include "doctest.h"
+
 #include "red_black_tree.h"
 
 TEST_CASE("Inserção") {

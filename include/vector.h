@@ -9,9 +9,9 @@
 
 #include <cstddef>
 #include <initializer_list>
+#include <stdexcept>
 
 #include "utils.h"
-#include "vector_excpt.h"
 
 // The growth factor determines how much a vector should grow when it needs to
 // be resized
@@ -84,7 +84,6 @@ class Vector
          * @brief Overload do operador []
          * @param index Índice do elemento que será buscado
          * @return Elemento na posição index
-         * @throw InvalidIndex Caso o índice seja inválido
          */
         typeT& operator[](std::size_t index);
         typeT& operator[](std::size_t index) const;
@@ -119,7 +118,7 @@ class Vector
         /**
          * @brief Swap the positions of two elements
          * @param index1, index2 Positions of the elements to be swapped
-         * @throw InvalidIndex If any of the indices is invalid
+         * @throw std::out_of_range If any of the indices is invalid
          */
         void Swap(std::size_t index1, std::size_t index2);
 
@@ -154,6 +153,7 @@ class Vector
 
         /**
          * @return The element at the specified index
+         * @throw std::out_of_range If the index is invalid
          **/
         typeT& At(std::size_t index);
 
@@ -351,7 +351,7 @@ template<typename typeT>
 void Vector<typeT>::Swap(std::size_t index1, std::size_t index2)
 {
     if ((std::size_t)utils::Max(index1, index2) > this->m_capacity)
-        throw vecexcpt::InvalidIndex();
+        throw std::out_of_range("Index out of bounds");
 
     typeT aux = this->m_elements[index1];
 
@@ -422,7 +422,7 @@ template<typename typeT>
 typeT& Vector<typeT>::At(std::size_t index)
 {
     if (index > this->m_size)
-        throw vecexcpt::InvalidIndex();
+        throw std::out_of_range("Index out of bounds");
 
     return this->m_elements[index];
 }

@@ -4,11 +4,13 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
-#include "doctest.h"
-#include "node_rbtree.h"
-#include "pair.h"
 #include <cmath>
 #include <cstdint>
+
+#include "doctest.h"
+
+#include "node_rbtree.h"
+#include "pair.h"
 
 TEST_CASE("rbtree::Node Tests")
 {

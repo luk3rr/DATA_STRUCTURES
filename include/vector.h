@@ -50,14 +50,14 @@ class Vector
          * @brief Constructor
          * @param size Initial space allocated for the vector
          */
-        Vector(std::size_t size);
+        Vector(const std::size_t size);
 
         /**
          * @brief Constructor
          * @param size Initial space allocated for the vector
          * @param value Initialization value for the elements in the vector
          */
-        Vector(std::size_t size, typeT value);
+        Vector(const std::size_t size, const typeT value);
 
         /**
          * @brief Construtor with initializer list to receive data as {x1, x2, x3,
@@ -85,8 +85,8 @@ class Vector
          * @param index Índice do elemento que será buscado
          * @return Elemento na posição index
          */
-        typeT& operator[](std::size_t index);
-        typeT& operator[](std::size_t index) const;
+        typeT& operator[](const std::size_t index);
+        const typeT& operator[](const std::size_t index) const;
 
         /**
          * @brief Operator overload for ==
@@ -99,7 +99,6 @@ class Vector
          * @brief Get the current size of the vector
          * @return An integer representing the size of the vector
          */
-        std::size_t Size();
         std::size_t Size() const;
 
         /**
@@ -107,31 +106,43 @@ class Vector
          * is reallocated to accommodate more elements)
          * @return An integer representing the current maximum size of the vector
          */
-        std::size_t GetMaxSize();
+        std::size_t GetMaxSize() const;
 
         /**
          * @brief Check if the vector is empty
          * @return True if the vector is empty, False otherwise
          */
-        bool IsEmpty();
+        bool IsEmpty() const;
 
         /**
          * @brief Swap the positions of two elements
          * @param index1, index2 Positions of the elements to be swapped
          * @throw std::out_of_range If any of the indices is invalid
          */
-        void Swap(std::size_t index1, std::size_t index2);
+        void Swap(const std::size_t index1, const std::size_t index2);
 
         /**
          * @brief Insert a new element at the end of the vector
          * @param element New element
          */
-        void PushBack(typeT element);
+        void PushBack(const typeT element);
 
         /**
          * @brief Remove the element at the end of the vector
          */
         void PopBack();
+
+        /**
+         * @return The element at the beginning of the vector
+         * @throw std::overflow_error If the vector is empty
+         */
+        typeT& Front() const;
+
+        /**
+         * @return The element at the end of the vector
+         * @throw std::overflow_error If the vector is empty
+         */
+        typeT& Back() const;
 
         /**
          * @brief Clear the vector
@@ -143,19 +154,20 @@ class Vector
          * @param newSize New size of the vector
          * @param val Default value for custom values when resizing
          */
-        void Resize(std::size_t newSize, typeT val = typeT());
+        void Resize(const std::size_t newSize, const typeT val = typeT());
 
         /**
-         * * @brief Allocate a new space for this vector
+         * @brief Allocate a new space for this vector
          * @param newalloc Size of the new allocate
          **/
-        void Reserve(std::size_t newalloc);
+        void Reserve(const std::size_t newalloc);
 
         /**
          * @return The element at the specified index
          * @throw std::out_of_range If the index is invalid
          **/
-        typeT& At(std::size_t index);
+        typeT& At(const std::size_t index);
+        const typeT& At(const std::size_t index) const;
 
         // Iterator
         using value_type = typeT;
@@ -229,7 +241,7 @@ Vector<typeT>::Vector()
 }
 
 template<typename typeT>
-Vector<typeT>::Vector(std::size_t size)
+Vector<typeT>::Vector(const std::size_t size)
 {
     this->m_capacity = size;
     this->m_size     = 0;
@@ -237,7 +249,7 @@ Vector<typeT>::Vector(std::size_t size)
 }
 
 template<typename typeT>
-Vector<typeT>::Vector(std::size_t size, typeT val)
+Vector<typeT>::Vector(const std::size_t size, const typeT val)
 {
     this->m_capacity = size;
     this->m_size     = 0;
@@ -250,7 +262,7 @@ Vector<typeT>::Vector(std::size_t size, typeT val)
 }
 
 template<typename typeT>
-Vector<typeT>::Vector(std::initializer_list<typeT> values)
+Vector<typeT>::Vector(const std::initializer_list<typeT> values)
 {
     this->m_elements = new typeT[values.size()];
     this->m_capacity = values.size();
@@ -295,13 +307,13 @@ Vector<typeT>& Vector<typeT>::operator=(const Vector<typeT>& other)
 }
 
 template<typename typeT>
-typeT& Vector<typeT>::operator[](std::size_t index)
+typeT& Vector<typeT>::operator[](const std::size_t index)
 {
     return this->m_elements[index];
 }
 
 template<typename typeT>
-typeT& Vector<typeT>::operator[](std::size_t index) const
+const typeT& Vector<typeT>::operator[](const std::size_t index) const
 {
     return this->m_elements[index];
 }
@@ -324,31 +336,25 @@ bool Vector<typeT>::operator==(Vector<typeT>& other)
 }
 
 template<typename typeT>
-std::size_t Vector<typeT>::Size()
-{
-    return this->m_size;
-}
-
-template<typename typeT>
 std::size_t Vector<typeT>::Size() const
 {
     return this->m_size;
 }
 
 template<typename typeT>
-std::size_t Vector<typeT>::GetMaxSize()
+std::size_t Vector<typeT>::GetMaxSize() const
 {
     return this->m_capacity;
 }
 
 template<typename typeT>
-bool Vector<typeT>::IsEmpty()
+bool Vector<typeT>::IsEmpty() const
 {
     return this->m_size == 0;
 }
 
 template<typename typeT>
-void Vector<typeT>::Swap(std::size_t index1, std::size_t index2)
+void Vector<typeT>::Swap(const std::size_t index1, const std::size_t index2)
 {
     if ((std::size_t)utils::Max(index1, index2) > this->m_capacity)
         throw std::out_of_range("Index out of bounds");
@@ -360,7 +366,7 @@ void Vector<typeT>::Swap(std::size_t index1, std::size_t index2)
 }
 
 template<typename typeT>
-void Vector<typeT>::PushBack(typeT element)
+void Vector<typeT>::PushBack(const typeT element)
 {
     if (this->m_size == this->m_capacity)
     {
@@ -368,6 +374,25 @@ void Vector<typeT>::PushBack(typeT element)
     }
 
     this->m_elements[this->m_size++] = element;
+}
+
+
+template<typename typeT>
+typeT& Vector<typeT>::Front() const
+{
+    if (this->IsEmpty())
+        throw std::overflow_error("Vector is empty");
+
+    return m_elements[0];
+}
+
+template<typename typeT>
+typeT& Vector<typeT>::Back() const
+{
+    if (this->IsEmpty())
+        throw std::overflow_error("Vector is empty");
+
+    return m_elements[this->m_size - 1];
 }
 
 template<typename typeT>
@@ -426,5 +451,15 @@ typeT& Vector<typeT>::At(std::size_t index)
 
     return this->m_elements[index];
 }
+
+template<typename typeT>
+const typeT& Vector<typeT>::At(std::size_t index) const
+{
+    if (index > this->m_size)
+        throw std::out_of_range("Index out of bounds");
+
+    return this->m_elements[index];
+}
+
 
 #endif // VECTOR_H_

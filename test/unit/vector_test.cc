@@ -5,6 +5,7 @@
 */
 
 #include <cstddef>
+#include <cstdint>
 #include <stdexcept>
 
 #include "doctest.h"
@@ -123,7 +124,6 @@ TEST_CASE("Iterator") {
     CHECK(correct);
 }
 
-
 TEST_CASE("Construtor com initializer list")
 {
     Vector<int> vector({1, 2, 3, 5, 9});
@@ -131,4 +131,20 @@ TEST_CASE("Construtor com initializer list")
     CHECK(vector[0] == 1);
     CHECK(vector[2] == 3);
     CHECK(vector[4] == 9);
+}
+
+TEST_CASE("Obter os elementos na primeira e na última posição do vector")
+{
+    Vector<uint32_t> vec({11, 2, 90});
+
+    CHECK(vec.Back() == 90);
+    CHECK(vec.Front() == 11);
+
+    vec.PushBack(99);
+    CHECK(vec.Back() == 99);
+
+    vec.Clear();
+
+    CHECK_THROWS_AS(vec.Back(), std::overflow_error);
+    CHECK_THROWS_AS(vec.Front(), std::overflow_error);
 }

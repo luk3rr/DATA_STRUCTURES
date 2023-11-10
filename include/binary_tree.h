@@ -113,6 +113,12 @@ class BinaryTree
         void Insert(typeT key);
 
         /**
+         * @brief Get a pointer to the root node of the binary tree
+         * @return A pointer to the root node
+         */
+        dlkd::Node<typeT>* GetRoot() const;
+
+        /**
          * @brief Deletes a specific node
          * @param key Key of the node to be deleted
          */
@@ -274,6 +280,12 @@ void BinaryTree<typeT>::Insert(dlkd::Node<typeT>*& node, typeT key)
             this->Insert(node->GetRightNode(), key);
         }
     }
+}
+
+template<typename typeT>
+dlkd::Node<typeT>* BinaryTree<typeT>::GetRoot() const
+{
+    return m_root;
 }
 
 template<typename typeT>

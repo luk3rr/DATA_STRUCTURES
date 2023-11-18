@@ -252,6 +252,10 @@ namespace rbtree
             this->m_root->SetColor(BLACK);
             return this->m_root;
         }
+        else if (this->m_equalComp(m_root->GetValue(), key))
+        {
+            return m_root;
+        }
         else
         {
             if (this->m_lessComp(key, this->m_root->GetValue()))
@@ -270,9 +274,16 @@ namespace rbtree
     {
         if (node == nullptr)
         {
-            node = new Node<typeT>(key, parent);
             this->m_numNodes++;
+            // FixInsert modifies the pointer, so create a temporary one for returning
+            // purposes
+            Node<typeT>* newNode = new Node<typeT>(key, parent);
+            node                 = newNode;
             this->FixInsert(node);
+            return newNode;
+        }
+        else if (this->m_equalComp(node->GetValue(), key))
+        {
             return node;
         }
         else

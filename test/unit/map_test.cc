@@ -107,20 +107,15 @@ TEST_CASE("Mudar valores")
     CHECK(map.IsEmpty());
 }
 
-// TODO: Corrigir: Em alguns casos de acesso com o operador [], caso a chave ainda não
-// exista, ocorre o erro de segmentação
 TEST_CASE("Incremento")
 {
     rbtree::Map<char, uint32_t> map;
 
-    std::string palavra = "PARDSCDACACMZNSDI@!*@#";
+    std::string palavra = "PARDSDDABACMZNSDI@!*@#";
 
     for (char& letra : palavra)
     {
-        if (map.Contains(letra))
-            map[letra]++;
-        else
-            map[letra];
+        map[letra]++;
     }
 
     map.Clear();

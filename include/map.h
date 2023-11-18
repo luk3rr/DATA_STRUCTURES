@@ -248,11 +248,6 @@ namespace rbtree
     template<typename typeK, typename typeV>
     typeV& Map<typeK, typeV>::operator[](const typeK& key)
     {
-        NodeType* node = RBTree::Search(Pair<typeK, typeV>(key, typeV()));
-
-        if (node != nullptr)
-            return node->GetValue().GetSecond();
-
         return RBTree::Insert(Pair<typeK, typeV>(key, typeV()))->GetValue().GetSecond();
     }
 

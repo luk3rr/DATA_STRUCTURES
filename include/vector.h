@@ -252,7 +252,7 @@ template<typename typeT>
 Vector<typeT>::Vector(const std::size_t size, const typeT val)
 {
     this->m_capacity = size;
-    this->m_size     = 0;
+    this->m_size     = size;
     this->m_elements = new typeT[this->m_capacity];
 
     for (std::size_t i = 0; i < size; i++)

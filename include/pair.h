@@ -78,6 +78,13 @@ class Pair
 };
 
 template<typename typeK, typename typeV>
+Pair<typeK, typeV>::Pair()
+{
+    this->m_key   = typeK();
+    this->m_value = typeV();
+}
+
+template<typename typeK, typename typeV>
 Pair<typeK, typeV>::Pair(const typeK& key, const typeV& value)
 {
     this->m_key   = key;

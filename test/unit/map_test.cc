@@ -24,13 +24,27 @@ TEST_CASE("Inserção e busca")
 
     CHECK(map.Size() == 7);
 
-    CHECK(map[5] == "Five");
-    CHECK(map[2] == "Two");
-    CHECK(map[8] == "Eight");
-    CHECK(map[1] == "One");
-    CHECK(map[4] == "Four");
-    CHECK(map[7] == "Seven");
-    CHECK(map[10] == "Ten");
+    SUBCASE("With [] operator")
+    {
+        CHECK(map[5] == "Five");
+        CHECK(map[2] == "Two");
+        CHECK(map[8] == "Eight");
+        CHECK(map[1] == "One");
+        CHECK(map[4] == "Four");
+        CHECK(map[7] == "Seven");
+        CHECK(map[10] == "Ten");
+    }
+
+    SUBCASE("With At() method")
+    {
+        CHECK(map.At(5) == "Five");
+        CHECK(map.At(2) == "Two");
+        CHECK(map.At(8) == "Eight");
+        CHECK(map.At(1) == "One");
+        CHECK(map.At(4) == "Four");
+        CHECK(map.At(7) == "Seven");
+        CHECK(map.At(10) == "Ten");
+    }
 }
 
 TEST_CASE("Remoção")
@@ -101,6 +115,10 @@ TEST_CASE("Mudar valores")
     }
 
     CHECK(map[5] == "Allow");
+
+    // At()
+    map.At(5) = "Five";
+    CHECK(map[5] == "Five");
 
     map.Clear();
     CHECK(map.Size() == 0);

@@ -100,6 +100,12 @@ namespace rbtree
             typeV& operator[](const typeK& key);
 
             /**
+             * @brief Access an element in the map
+             * @param key Key to be looked up
+             **/
+            typeV& At(const typeK& key);
+
+            /**
              * @brief Overload to insert a new element without a node pointer
              * @param key, value Key and value to be inserted
              * @return Pointer to the inserted node
@@ -247,6 +253,12 @@ namespace rbtree
 
     template<typename typeK, typename typeV>
     typeV& Map<typeK, typeV>::operator[](const typeK& key)
+    {
+        return RBTree::Insert(Pair<typeK, typeV>(key, typeV()))->GetValue().GetSecond();
+    }
+
+    template<typename typeK, typename typeV>
+    typeV& Map<typeK, typeV>::At(const typeK& key)
     {
         return RBTree::Insert(Pair<typeK, typeV>(key, typeV()))->GetValue().GetSecond();
     }

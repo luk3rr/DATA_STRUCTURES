@@ -115,7 +115,7 @@ namespace rbtree
             /**
              * @return Number of elements in the map
              */
-            std::size_t Size();
+            std::size_t Size() const;
 
             /**
              * @return True if it's empty, False otherwise
@@ -271,7 +271,7 @@ namespace rbtree
     }
 
     template<typename typeK, typename typeV>
-    std::size_t Map<typeK, typeV>::Size()
+    std::size_t Map<typeK, typeV>::Size() const
     {
         return RBTree::Size();
     }

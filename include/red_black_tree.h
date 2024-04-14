@@ -192,7 +192,7 @@ namespace rbtree
              * @brief Returns the number of elements in the Red-Black Tree
              * @return Number of elements in the Red-Black Tree
              */
-            std::size_t Size();
+            std::size_t Size() const;
 
             /**
              * @brief Checks if the Red-Black Tree is empty
@@ -357,7 +357,7 @@ namespace rbtree
     }
 
     template<typename typeT, typename lessComparator, typename equalComparator>
-    std::size_t RedBlackTree<typeT, lessComparator, equalComparator>::Size()
+    std::size_t RedBlackTree<typeT, lessComparator, equalComparator>::Size() const
     {
         return this->m_numNodes;
     }

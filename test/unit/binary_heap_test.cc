@@ -12,7 +12,7 @@
 
 TEST_CASE("Max binary heap: Inserir/Remover elemento")
 {
-    bheap::BinaryHeap<int, utils::greater<int>> bheap;
+    bheap::BinaryHeap<int, decltype(comparators::greater<int>)> bheap;
 
     SUBCASE("Caso 1: tamanho 1")
     {

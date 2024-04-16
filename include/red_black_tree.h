@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "comparators.h"
 #include "node_rbtree.h"
 #include "utils.h"
 
@@ -35,8 +36,8 @@ namespace rbtree
      * @tparam equalComparator The custom comparator for equal comparisons
      */
     template<typename typeT,
-             typename lessComparator  = utils::less<typeT>,
-             typename equalComparator = utils::equal<typeT>>
+             typename lessComparator  = decltype(comparators::less<typeT>),
+             typename equalComparator = decltype(comparators::equal<typeT>)>
     class RedBlackTree
     {
         protected:

@@ -9,8 +9,8 @@
 
 #include <cstddef>
 
+#include "comparators.h"
 #include "heap_base.h"
-#include "utils.h"
 #include "vector.h"
 
 namespace bheap
@@ -33,10 +33,10 @@ namespace bheap
      * @tparam typeT The type of elements stored in the binary heap
      * @tparam Compare The custom comparator used to maintain the heap property
      *
-     * NOTE: By default, the 'Compare' parameter is set to 'utils::less<typeT>' for a
+     * NOTE: By default, the 'Compare' parameter is set to 'comparators::less<typeT>' for a
      * minimum priority
      */
-    template<typename typeT, typename Compare = utils::less<typeT>>
+    template<typename typeT, typename Compare = decltype(comparators::less<typeT>)>
     class BinaryHeap : HeapBase<typeT>
     {
         private:

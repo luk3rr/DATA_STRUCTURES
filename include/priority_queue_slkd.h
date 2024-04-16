@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include "comparators.h"
 #include "node.h"
 #include "queue_base.h"
 
@@ -31,10 +32,10 @@ namespace slkd
      * @tparam typeT The type of elements stored in the priority queue
      * @tparam Compare The custom comparator used to determine the priority of elements
      *
-     * NOTE: By default, the 'Compare' parameter is set to 'utils::less<typeT>' for a
-     * minimum priority queue
+     * NOTE: By default, the 'Compare' parameter is set to 'comparators::less<typeT>'
+     * for a minimum priority queue
      */
-    template<typename typeT, typename Compare = utils::less<typeT>>
+    template<typename typeT, typename Compare = decltype(comparators::less<typeT>)>
     class PriorityQueue : public QueueBase<typeT>
     {
         private:

@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 #include "binary_heap.h"
+#include "comparators.h"
 #include "queue_base.h"
 #include "vector.h"
 
@@ -32,10 +33,10 @@ namespace bheap
      * @tparam typeT The type of elements stored in the priority queue
      * @tparam Compare The custom comparator used to determine the priority of elements
      *
-     * NOTE: By default, the 'Compare' parameter is set to 'utils::less<typeT>' for a
+     * NOTE: By default, the 'Compare' parameter is set to 'comparators::less<typeT>' for a
      * minimum priority queue
      */
-    template<typename typeT, typename Compare = utils::less<typeT>>
+    template<typename typeT, typename Compare = decltype(comparators::less<typeT>)>
     class PriorityQueue : public QueueBase<typeT>, public BinaryHeap<typeT, Compare>
     {
         private:

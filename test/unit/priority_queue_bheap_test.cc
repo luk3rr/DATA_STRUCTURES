@@ -13,7 +13,7 @@
 
 TEST_CASE("Max Priority Queue: Inserir/Remover elemento")
 {
-    bheap::PriorityQueue<int, utils::greater<int>> pqueue;
+    bheap::PriorityQueue<int, decltype(comparators::greater<int>)> pqueue;
 
     SUBCASE("Caso 1: Lista vazia")
     {

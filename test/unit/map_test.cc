@@ -140,3 +140,20 @@ TEST_CASE("Incremento")
     CHECK(map.Size() == 0);
     CHECK(map.IsEmpty());
 }
+
+TEST_CASE("Get method")
+{
+    rbtree::Map<uint32_t, std::string> map;
+
+    map.Insert(5, "Five");
+    map.Insert(2, "Two");
+    map.Insert(8, "Eight");
+    map.Insert(1, "One");
+    map.Insert(4, "Four");
+    map.Insert(7, "Seven");
+
+    CHECK(map.Get(5) == "Five");
+    CHECK(map.Get(2) == "Two");
+
+    CHECK_THROWS(map.Get(10));
+}

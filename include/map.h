@@ -88,14 +88,28 @@ namespace rbtree
              * @brief Overload of the operator []
              * @param key Key to be looked up
              * @return The value corresponding to the key
+             *
+             * If the key is not in the map, it will be inserted with a default value
              **/
             typeV& operator[](const typeK& key);
 
             /**
              * @brief Access an element in the map
              * @param key Key to be looked up
+             * @return The value corresponding to the key
+             *
+             * If the key is not in the map, it will be inserted with a default value
              **/
             typeV& At(const typeK& key);
+
+            /**
+             * @brief Get the value associated with a key
+             * @param key Key to be looked up
+             * @return The value corresponding to the key
+             *
+             * If the key is not in the map,
+             **/
+            typeV& Get(const typeK& key);
 
             /**
              * @brief Overload to insert a new element without a node pointer
@@ -253,6 +267,17 @@ namespace rbtree
     typeV& Map<typeK, typeV>::At(const typeK& key)
     {
         return RBTree::Insert(Pair<typeK, typeV>(key, typeV()))->GetValue().GetSecond();
+    }
+
+    template<typename typeK, typename typeV>
+    typeV& Map<typeK, typeV>::Get(const typeK& key)
+    {
+        NodeType* node = RBTree::Search(Pair<typeK, typeV>(key, typeV()));
+
+        if (node == nullptr)
+            throw std::out_of_range("Key not found in the map");
+
+        return node->GetValue().GetSecond();
     }
 
     template<typename typeK, typename typeV>

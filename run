@@ -20,7 +20,7 @@ Options:
     -e, --exec         Run the main program
     -t, --test         Run the unit tests
     -c, --clean        Clean CMake artifacts
-    -m, --memleak      Run Valgrind tests to check for memory leaks
+    -v, --valgrind     Run Valgrind tests to check for memory leaks
     -h, --help         Show this help message and exit
     -h, --help         Show this help message and exit
     -x, --exec_args    Arguments for cmake_exec
@@ -34,28 +34,50 @@ import shutil
 BUILD_DIR = "build"
 BIN_DIR = "bin"
 RELEASE_DIR = "Release"
+DEBUG_DIR = "Debug"
 PROGRAM_NAME = "program"
 UNIT_TEST_NAME = "unit_test"
-VALGRIND_COMMAND = "valgrind --leak-check=full"
+VALGRIND_MEMLEAK = "valgrind --leak-check=full"
+VALGRIND_MASSIF = "valgrind --tool=massif"
 
 
-def run_valgrind_tests():
+def run_valgrind_tests(program_args=None):
     """
     @brief
         Run Valgrind tests on the program and unit tests.
 
         This function uses Valgrind to check for memory leaks in the program and unit tests.
     """
-    cmake_build()
+    cmake_build(debug=True)
 
-    valgrind_program = f"{VALGRIND_COMMAND} {BIN_DIR}/{PROGRAM_NAME} > /dev/null"
-    valgrind_tests = f"{VALGRIND_COMMAND} {BIN_DIR}/{UNIT_TEST_NAME}"
+    valgrind_memleak_program = [
+        f"{VALGRIND_MEMLEAK} {BIN_DIR}/{DEBUG_DIR}/{PROGRAM_NAME}"
+    ]
 
-    print("Running Valgrind on program:")
-    subprocess.run(valgrind_program, shell=True, check=True)
+    valgrind_memleak_tests = [
+        f"{VALGRIND_MEMLEAK} {BIN_DIR}/{DEBUG_DIR}/{UNIT_TEST_NAME}"
+    ]
 
-    print("Running Valgrind on unit tests:")
-    subprocess.run(valgrind_tests, shell=True, check=True)
+    valgrind_massif_program = [
+        f"{VALGRIND_MASSIF} {BIN_DIR}/{DEBUG_DIR}/{PROGRAM_NAME}"
+    ]
+
+    if program_args is not None:
+        # Convert program_args to string
+        program_args_str = " ".join(map(str, program_args))
+
+        # Append program arguments to Valgrind commands
+        valgrind_memleak_program[0] += " " + program_args_str
+        valgrind_massif_program[0] += " " + program_args_str
+
+    print("Running Valgrind memleak on program:")
+    subprocess.run(valgrind_memleak_program, shell=True, check=True)
+
+    print("Running Valgrind memleka on unit tests:")
+    subprocess.run(valgrind_memleak_tests, shell=True, check=True)
+
+    print("Running Valgrind massif on program:")
+    subprocess.run(valgrind_massif_program, shell=True, check=True)
 
 
 def cmake_build(debug=False):
@@ -65,6 +87,9 @@ def cmake_build(debug=False):
     This function creates the build directory if it doesn't exist, changes to that
     directory, runs CMake configuration, and then builds the project.
     """
+
+    check_submodules()
+
     if not os.path.exists(BUILD_DIR):
         os.makedirs(BUILD_DIR)
 
@@ -84,6 +109,7 @@ def cmake_build(debug=False):
     subprocess.run(build_command, shell=True, check=True)
 
     os.chdir(current_dir)
+
 
 def cmake_exec(program_args=None):
     """
@@ -165,6 +191,37 @@ def clean_cmake_artifacts(project_path=None):
     print(f"Removing bin files: {bin_dir}")
 
 
+def check_submodules():
+    """
+    @brief
+        Check if the project has submodules and update them if necessary.
+
+        This function checks if the project has submodules and updates them if necessary.
+    """
+    if os.path.exists(".gitmodules"):
+        # Check if the submodules are empty
+        submodules_dir = "submodules"
+        if os.path.isdir(submodules_dir):
+            for d in os.listdir(submodules_dir):
+                submodule_path = os.path.join(submodules_dir, d)
+                if os.path.isdir(submodule_path):
+                    if not os.listdir(submodule_path):
+                        print(
+                            f"The submodule directory {submodule_path} is empty. Updating..."
+                        )
+
+                        subprocess.run(
+                            [
+                                "git",
+                                "submodule",
+                                "update",
+                                "--init",
+                                submodule_path,
+                            ],
+                            check=True,
+                        )
+
+
 def main():
     """
     @brief
@@ -183,10 +240,10 @@ def main():
         "-t", "--test", action="store_true", help="Run CMake unit tests"
     )
     parser.add_argument(
-        "-m",
-        "--memleak",
+        "-v",
+        "--valgrind",
         action="store_true",
-        help="Run Valgrind tests for memory leaks",
+        help="Run Valgrind tests for memory leaks and memory usage",
     )
     parser.add_argument(
         "-x", "--exec_args", nargs=argparse.REMAINDER, help="Arguments for cmake_exec"
@@ -212,8 +269,8 @@ def main():
     elif args.test:
         cmake_unit_tests()
 
-    elif args.memleak:
-        run_valgrind_tests()
+    elif args.valgrind:
+        run_valgrind_tests(args.exec_args)
 
 
 if __name__ == "__main__":

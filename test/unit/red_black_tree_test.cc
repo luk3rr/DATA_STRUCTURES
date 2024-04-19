@@ -1,14 +1,19 @@
 /*
-* Filename: red_black_tree_test.cc
-* Created on: July  7, 2023
-* Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
-*/
+ * Filename: red_black_tree_test.cc
+ * Created on: July  7, 2023
+ * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
+ */
 
 #include "doctest.h"
 
-#include "red_black_tree.h"
+#include <random>
+#include <set>
 
-TEST_CASE("Inserção") {
+#include "red_black_tree.h"
+#include "vector.h"
+
+TEST_CASE("Inserção")
+{
     rbtree::RedBlackTree<int> tree;
 
     tree.Insert(5);
@@ -23,7 +28,8 @@ TEST_CASE("Inserção") {
     CHECK(tree.IsRedBlackTreeBalanced());
 }
 
-TEST_CASE("Balancemaneto: Caso árvore degenerada") {
+TEST_CASE("Balancemaneto: Caso árvore degenerada")
+{
     rbtree::RedBlackTree<int> tree;
 
     tree.Insert(0);
@@ -42,7 +48,8 @@ TEST_CASE("Balancemaneto: Caso árvore degenerada") {
     CHECK(tree.IsRedBlackTreeBalanced());
 }
 
-TEST_CASE("Remoção") {
+TEST_CASE("Remoção")
+{
     rbtree::RedBlackTree<int> tree;
 
     tree.Insert(5);
@@ -65,7 +72,8 @@ TEST_CASE("Remoção") {
     CHECK(tree.Size() == 6);
 }
 
-TEST_CASE("Esvaziamento do tree") {
+TEST_CASE("Esvaziamento do tree")
+{
     rbtree::RedBlackTree<int> tree;
 
     CHECK(tree.Size() == 0);
@@ -83,4 +91,50 @@ TEST_CASE("Esvaziamento do tree") {
 
     CHECK(tree.Size() == 0);
     CHECK(tree.IsEmpty());
+}
+
+TEST_CASE("Insertion and Removal")
+{
+    rbtree::RedBlackTree<int>        tree;
+    std::random_device               rd;
+    std::mt19937                     gen(rd());
+    std::uniform_real_distribution<> probability(0.0, 1.0);
+
+    std::set<int> valuesInTree;
+
+    const int numOperations = 30;
+
+    for (int i = 0; i < numOperations; ++i)
+    {
+        double choice = probability(gen);
+
+        Vector<int> insertionValues;
+        Vector<int> removalValues;
+
+        if (choice < 0.75)
+        {
+            // 75% of chance of adding
+            int value = i;
+            tree.Insert(value);
+            valuesInTree.insert(value);
+            insertionValues.PushBack(value);
+        }
+        else
+        {
+            // 25% of chance of removing
+            if (not valuesInTree.empty())
+            {
+                std::uniform_int_distribution<> dis(0, valuesInTree.size() - 1);
+                auto                            it = valuesInTree.begin();
+                std::advance(it, dis(gen));
+                int value = *it;
+                tree.Remove(value);
+                valuesInTree.erase(it);
+                removalValues.PushBack(value);
+            }
+        }
+    }
+
+    // Check if the tree is balanced
+    CHECK(tree.IsRedBlackTreeBalanced());
 }

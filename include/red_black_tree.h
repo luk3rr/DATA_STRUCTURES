@@ -124,7 +124,7 @@ namespace rbtree
              * @param node The node where the search will begin
              * @return Pointer to the leftmost node
              */
-            Node<typeT>* FindLeftMostNode(Node<typeT>* node);
+            Node<typeT>* FindSuccessor(Node<typeT>* node);
 
             /**
              * @brief Delete the leftmost node
@@ -152,9 +152,10 @@ namespace rbtree
              * False if the node is on the right side
              */
             void DumpTree(Node<typeT>*&      node,
-                          const std::string& vBar,
+                          const std::string& prefix,
                           std::ofstream&     output,
-                          bool               sideIsLeft);
+                          bool               isLeft,
+                          int                depth);
 
             /**
              * @brief Check the number of black nodes in the tree
@@ -211,7 +212,7 @@ namespace rbtree
              * @brief Prints the tree
              * @param output The file where the printing will be done
              */
-            void DumpTree(std::ofstream& output);
+            void DumpTree(const std::string& filename);
 
             /**
              * @brief Remove an element from the Red-Black Tree
@@ -382,28 +383,25 @@ namespace rbtree
         if (node == nullptr)
             return;
 
-        Node<typeT>* nodeCopy = node;
         Node<typeT>* aux;
         Color        nodeColor = node->GetColor();
 
-        if (node->GetLeftNode() == nullptr)
+        if (node->GetLeftNode() == nullptr) // Case 1: node has no left child
         {
             aux = node->GetRightNode();
-
             this->Transplant(node, node->GetRightNode());
         }
-        else if (node->GetRightNode() == nullptr)
+        else if (node->GetRightNode() == nullptr) // Case 2: node has no right child
         {
             aux = node->GetLeftNode();
-
             this->Transplant(node, node->GetLeftNode());
         }
-        else
+        else // Case 3: node has two children
         {
-            nodeCopy  = this->FindLeftMostNode(node->GetRightNode());
 
-            nodeColor = nodeCopy->GetColor();
-            aux       = nodeCopy->GetRightNode();
+            Node<typeT>* nodeCopy = this->FindSuccessor(node);
+            nodeColor             = nodeCopy->GetColor();
+            aux                   = nodeCopy->GetRightNode();
 
             if (aux and nodeCopy->GetParent() == node)
             {
@@ -425,13 +423,12 @@ namespace rbtree
             nodeCopy->SetColor(node->GetColor());
         }
 
-        delete node;
         this->m_numNodes--;
 
         if (nodeColor == BLACK)
-        {
             this->FixDelete(aux);
-        }
+
+        delete node;
     }
 
     template<typename typeT, typename lessComparator, typename equalComparator>
@@ -446,89 +443,98 @@ namespace rbtree
             {
                 aux = node->GetParent()->GetRightNode();
 
-                if (not aux)
-                    break;
-
-                if (aux and aux->GetColor() == RED)
+                if (aux != nullptr)
                 {
-                    aux->SetColor(BLACK);
-                    node->GetParent()->SetColor(RED);
-                    this->RotateLeft(node->GetParent());
-                    aux = node->GetParent()->GetRightNode();
-                }
-
-                if (aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK and
-                    aux->GetRightNode() and aux->GetRightNode()->GetColor() == BLACK)
-                {
-                    aux->SetColor(RED);
-                    node = node->GetParent();
-                }
-                else
-                {
-                    if (aux->GetRightNode() and
-                        aux->GetRightNode()->GetColor() == BLACK and
-                        aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK)
+                    if (aux->GetColor() == RED)
+                    {
+                        aux->SetColor(BLACK);
+                        node->GetParent()->SetColor(RED);
+                        this->RotateLeft(node->GetParent());
+                        aux = node->GetParent()->GetRightNode();
+                    }
+                    else if (aux->GetLeftNode() and
+                             aux->GetLeftNode()->GetColor() == BLACK and
+                             aux->GetRightNode() and
+                             aux->GetRightNode()->GetColor() == BLACK)
+                    {
+                        aux->SetColor(RED);
+                        node = node->GetParent();
+                    }
+                    else if (aux->GetRightNode() and
+                             aux->GetRightNode()->GetColor() == BLACK and
+                             aux->GetLeftNode())
                     {
                         aux->GetLeftNode()->SetColor(BLACK);
                         aux->SetColor(RED);
                         this->RotateRight(aux);
                         aux = node->GetParent()->GetRightNode();
                     }
+                    else
+                    {
+                        aux->SetColor(node->GetParent()->GetColor());
+                        node->GetParent()->SetColor(BLACK);
 
-                    aux->SetColor(node->GetParent()->GetColor());
-                    node->GetParent()->SetColor(BLACK);
+                        if (aux->GetRightNode())
+                            aux->GetRightNode()->SetColor(BLACK);
 
-                    if (aux->GetRightNode())
-                        aux->GetRightNode()->SetColor(BLACK);
-
-                    this->RotateLeft(node->GetParent());
-                    node = this->m_root;
+                        this->RotateLeft(node->GetParent());
+                        node = this->m_root;
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
             else
             {
-                if (not aux)
-                    break;
-
                 aux = node->GetParent()->GetLeftNode();
-                if (aux and aux->GetColor() == RED)
-                {
-                    aux->SetColor(BLACK);
-                    node->GetParent()->SetColor(RED);
-                    this->RotateRight(node->GetParent());
-                    aux = node->GetParent()->GetLeftNode();
-                }
 
-                if (aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK and
-                    aux->GetRightNode() and aux->GetRightNode()->GetColor() == BLACK)
+                if (aux != nullptr)
                 {
-                    aux->SetColor(RED);
-                    node = node->GetParent();
-                }
-                else
-                {
-
-                    if (aux->GetRightNode() and
-                        aux->GetRightNode()->GetColor() == BLACK and
-                        aux->GetLeftNode() and aux->GetLeftNode()->GetColor() == BLACK)
+                    if (aux->GetColor() == RED)
+                    {
+                        aux->SetColor(BLACK);
+                        node->GetParent()->SetColor(RED);
+                        this->RotateRight(node->GetParent());
+                        aux = node->GetParent()->GetLeftNode();
+                    }
+                    else if (aux->GetLeftNode() and
+                             aux->GetLeftNode()->GetColor() == BLACK and
+                             aux->GetRightNode() and
+                             aux->GetRightNode()->GetColor() == BLACK)
+                    {
+                        aux->SetColor(RED);
+                        node = node->GetParent();
+                    }
+                    else if (aux->GetLeftNode() and
+                             aux->GetLeftNode()->GetColor() == BLACK and
+                             aux->GetRightNode())
                     {
                         aux->GetRightNode()->SetColor(BLACK);
                         aux->SetColor(RED);
                         this->RotateLeft(aux);
                         aux = node->GetParent()->GetLeftNode();
                     }
+                    else
+                    {
+                        aux->SetColor(node->GetParent()->GetColor());
+                        node->GetParent()->SetColor(BLACK);
+
+                        if (aux->GetLeftNode())
+                            aux->GetLeftNode()->SetColor(BLACK);
+
+                        this->RotateRight(node->GetParent());
+                        node = this->m_root;
+                    }
                 }
-
-                aux->SetColor(node->GetParent()->GetColor());
-                node->GetParent()->SetColor(BLACK);
-
-                if (aux->GetLeftNode())
-                    aux->GetLeftNode()->SetColor(BLACK);
-
-                this->RotateRight(node->GetParent());
-                node = this->m_root;
+                else
+                {
+                    break;
+                }
             }
         }
+
         if (node != nullptr)
             node->SetColor(BLACK);
     }
@@ -684,15 +690,30 @@ namespace rbtree
     }
 
     template<typename typeT, typename lessComparator, typename equalComparator>
-    Node<typeT>* RedBlackTree<typeT, lessComparator, equalComparator>::FindLeftMostNode(
+    Node<typeT>* RedBlackTree<typeT, lessComparator, equalComparator>::FindSuccessor(
         Node<typeT>* node)
     {
-        Node<typeT>* current = node;
+        Node<typeT>* successor = nullptr;
 
-        while (current and current->GetLeftNode() != nullptr)
-            current = current->GetLeftNode();
+        if (node->GetRightNode() != nullptr)
+        {
+            successor = node->GetRightNode();
 
-        return current;
+            while (successor->GetLeftNode() != nullptr)
+                successor = successor->GetLeftNode();
+        }
+        else
+        {
+            Node<typeT>* parent = node->GetParent();
+            while (parent != nullptr and node == parent->GetRightNode())
+            {
+                node   = parent;
+                parent = parent->GetParent();
+            }
+            successor = parent;
+        }
+
+        return successor;
     }
 
     template<typename typeT, typename lessComparator, typename equalComparator>
@@ -746,47 +767,64 @@ namespace rbtree
 
     template<typename typeT, typename lessComparator, typename equalComparator>
     void RedBlackTree<typeT, lessComparator, equalComparator>::DumpTree(
-        std::ofstream& output)
+        const std::string& filename)
     {
+        std::ofstream output(filename);
+
+        if (not output.is_open())
+        {
+            std::cerr << "Error opening file " << filename << std::endl;
+            return;
+        }
+
         if (this->m_root != nullptr)
         {
-            output << this->m_root->GetValue() << ":" << this->m_root->GetColor()
-                   << std::endl;
-
-            this->DumpTree(this->m_root->GetLeftNode(), "", output, true);
-            this->DumpTree(this->m_root->GetRightNode(), "", output, false);
+            DumpTree(this->m_root, "", output, false, 0);
         }
+
+        output.close();
     }
 
     template<typename typeT, typename lessComparator, typename equalComparator>
     void RedBlackTree<typeT, lessComparator, equalComparator>::DumpTree(
         Node<typeT>*&      node,
-        const std::string& vBar,
+        const std::string& prefix,
         std::ofstream&     output,
-        bool               sideIsLeft)
+        bool               isLeft,
+        int                depth)
     {
         if (node != nullptr)
         {
-            if (sideIsLeft)
-            {
-                output << vBar << "├───" << node->GetValue() << ":" << node->GetColor()
-                       << std::endl;
-            }
+            // Adjust the tabulation based on the node depth
+            std::string tabulation = "";
+            for (int i = 0; i < depth; ++i)
+                tabulation += "\t";
+
+            // Call the function for the right subtree, if it exists
+            if (node->GetRightNode() != nullptr)
+                DumpTree(node->GetRightNode(),
+                         prefix + (isLeft ? "│   " : "    "),
+                         output,
+                         false,
+                         depth + 1);
+
+            output << prefix;
+
+            if (isLeft)
+                output << "└───";
             else
-            {
-                output << vBar << "└───" << node->GetValue() << ":" << node->GetColor()
-                       << std::endl;
-            }
+                output << "┌───";
 
-            this->DumpTree(node->GetLeftNode(),
-                           vBar + (sideIsLeft ? "│    " : "     "),
-                           output,
-                           true);
+            // Print the node value and its color
+            output << node->GetValue() << ":" << node->GetColor() << std::endl;
 
-            this->DumpTree(node->GetRightNode(),
-                           vBar + (sideIsLeft ? "│    " : "     "),
-                           output,
-                           false);
+            // Call the function for the left subtree, if it exists
+            if (node->GetLeftNode() != nullptr)
+                DumpTree(node->GetLeftNode(),
+                         prefix + (isLeft ? "    " : "│   "),
+                         output,
+                         true,
+                         depth + 1);
         }
     }
 
@@ -797,15 +835,15 @@ namespace rbtree
         if (node == nullptr)
             return true;
 
-        // Verifica a propriedade das cores
-        if (node->GetColor() != RED and node->GetColor() != BLACK)
-            return false;
-
-        // Verifica a propriedade da raiz
+        // 1. The root node must be black
         if (node == m_root and node->GetColor() != BLACK)
             return false;
 
-        // Verifica a propriedade dos filhos vermelhos
+        // 2. All nodes are either red or black
+        if (node->GetColor() != RED and node->GetColor() != BLACK)
+            return false;
+
+        // 3. If a node is red, then both its children are black
         if (node->GetColor() == RED)
         {
             if (node->GetLeftNode() and node->GetLeftNode()->GetColor() != BLACK)
@@ -815,7 +853,8 @@ namespace rbtree
                 return false;
         }
 
-        // Verifica a propriedade dos caminhos pretos
+        // 4. Every path from a node to its descendant null nodes must have the
+        // same number of black nodes
         std::size_t leftBlackCount  = GetBlackNodeCount(node->GetLeftNode());
         std::size_t rightBlackCount = GetBlackNodeCount(node->GetRightNode());
 
@@ -831,12 +870,12 @@ namespace rbtree
         Node<typeT>*& node)
     {
         if (node == nullptr)
-            return 1; // Folhas nulas são consideradas pretas
+            return 1; // Null nodes are black
 
         std::size_t leftCount  = GetBlackNodeCount(node->GetLeftNode());
         std::size_t rightCount = GetBlackNodeCount(node->GetRightNode());
 
-        // Incrementa o contador apenas para nós pretos
+        // If the node is black, add 1 to the count
         return node->GetColor() == BLACK ? leftCount + 1 : rightCount;
     }
 

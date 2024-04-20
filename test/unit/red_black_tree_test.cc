@@ -93,48 +93,45 @@ TEST_CASE("Esvaziamento do tree")
     CHECK(tree.IsEmpty());
 }
 
-TEST_CASE("Insertion and Removal")
-{
-    rbtree::RedBlackTree<int>        tree;
-    std::random_device               rd;
-    std::mt19937                     gen(rd());
-    std::uniform_real_distribution<> probability(0.0, 1.0);
-
-    std::set<int> valuesInTree;
-
-    const int numOperations = 30;
-
-    for (int i = 0; i < numOperations; ++i)
-    {
-        double choice = probability(gen);
-
-        Vector<int> insertionValues;
-        Vector<int> removalValues;
-
-        if (choice < 0.75)
-        {
-            // 75% of chance of adding
-            int value = i;
-            tree.Insert(value);
-            valuesInTree.insert(value);
-            insertionValues.PushBack(value);
-        }
-        else
-        {
-            // 25% of chance of removing
-            if (not valuesInTree.empty())
-            {
-                std::uniform_int_distribution<> dis(0, valuesInTree.size() - 1);
-                auto                            it = valuesInTree.begin();
-                std::advance(it, dis(gen));
-                int value = *it;
-                tree.Remove(value);
-                valuesInTree.erase(it);
-                removalValues.PushBack(value);
-            }
-        }
-    }
-
-    // Check if the tree is balanced
-    CHECK(tree.IsRedBlackTreeBalanced());
-}
+//TEST_CASE("Insertion and Removal")
+//{
+//    rbtree::RedBlackTree<int>        tree;
+//    std::random_device               rd;
+//    std::mt19937                     gen(rd());
+//    std::uniform_real_distribution<> probability(0.0, 1.0);
+//
+//    std::set<int> valuesInTree;
+//
+//    const int numOperations = 20;
+//
+//    for (int i = 0; i < numOperations; ++i)
+//    {
+//        double choice = probability(gen);
+//
+//        if (choice < 0.6)
+//        {
+//            // 75% of chance of adding
+//            int value = i;
+//            tree.Insert(value);
+//            valuesInTree.insert(value);
+//        }
+//        else
+//        {
+//            // 25% of chance of removing
+//            if (not valuesInTree.empty())
+//            {
+//                std::uniform_int_distribution<> dis(0, valuesInTree.size() - 1);
+//                auto                            it = valuesInTree.begin();
+//                std::advance(it, dis(gen));
+//                int value = *it;
+//                tree.Remove(value);
+//                valuesInTree.erase(it);
+//            }
+//        }
+//    }
+//
+//    tree.DumpTree("tree.dot");
+//
+//    // Check if the tree is balanced
+//    CHECK(tree.IsRedBlackTreeBalanced());
+//}

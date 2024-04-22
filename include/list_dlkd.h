@@ -23,8 +23,6 @@ namespace dlkd
      * elements stored in the list
      *
      * @tparam typeT The type of elements in the list
-     *
-     * TODO: Implement insert(value, pos)
      */
     template<typename typeT>
     class List
@@ -90,6 +88,13 @@ namespace dlkd
              * @param key The value to be stored
              */
             void PushBack(typeT key);
+
+            /**
+             * @brief Insert a new key into the list at a specific position
+             * @param key The value to be stored
+             * @param pos The position to insert the key
+             */
+            void Insert(typeT key, std::size_t pos);
 
             /**
              * @brief Remove a key from the list
@@ -250,6 +255,43 @@ namespace dlkd
         {
             this->m_tail->SetRightNode(new Node<typeT>(this->m_tail, key));
             this->m_tail = this->m_tail->GetRightNode();
+        }
+        this->m_size++;
+    }
+
+    template<typename typeT>
+    void List<typeT>::Insert(typeT key, std::size_t pos)
+    {
+        if (pos > this->m_size + 1)
+            throw std::out_of_range("Invalid position. pos > size");
+
+        if (pos == 0 and this->m_size == 0) // List is empty
+        {
+            this->m_head = this->m_tail = new Node<typeT>(key);
+        }
+        else if (pos == 0) // Insert at the beginning
+        {
+            Node<typeT>* new_node = new Node<typeT>(key, this->m_head);
+            this->m_head->SetLeftNode(new_node);
+            this->m_head = new_node;
+        }
+        else if (pos == this->m_size) // Insert at the end
+        {
+            Node<typeT>* new_node = new Node<typeT>(this->m_tail, key);
+            this->m_tail->SetRightNode(new_node);
+            this->m_tail = new_node;
+        }
+        else // Insert at the middle
+        {
+            Node<typeT>* current = this->m_head;
+
+            for (std::size_t i = 0; i < pos; i++)
+                current = current->GetRightNode();
+
+            Node<typeT>* new_node =
+                new Node<typeT>(key, current->GetLeftNode(), current);
+            current->GetLeftNode()->SetRightNode(new_node);
+            current->SetLeftNode(new_node);
         }
         this->m_size++;
     }

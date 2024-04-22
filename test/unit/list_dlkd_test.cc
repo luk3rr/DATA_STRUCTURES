@@ -114,3 +114,80 @@ TEST_CASE("Iterator")
         CHECK(correct);
     }
 }
+
+TEST_CASE("Insert with position")
+{
+    dlkd::List<uint32_t> list;
+
+    list.PushBack(1);
+    list.PushBack(2);
+    list.PushBack(3);
+    list.PushBack(4);
+
+    SUBCASE("Insert in the beginning")
+    {
+        REQUIRE(list.Size() == 4);
+
+        list.Insert(0, 0);
+
+        REQUIRE(list.Size() == 5);
+        REQUIRE(list.Front() == 0);
+        REQUIRE(list.Back() == 4);
+
+        dlkd::List<uint32_t>::Iterator it = list.begin();
+
+        CHECK(it->GetValue() == 0);
+        it++;
+        CHECK(it->GetValue() == 1);
+        it++;
+        CHECK(it->GetValue() == 2);
+        it++;
+        CHECK(it->GetValue() == 3);
+        it++;
+        CHECK(it->GetValue() == 4);
+    }
+
+    SUBCASE("Insert in the middle")
+    {
+        REQUIRE(list.Size() == 4);
+
+        list.Insert(20, 2);
+
+        REQUIRE(list.Size() == 5);
+        REQUIRE(list.Front() == 1);
+        REQUIRE(list.Back() == 4);
+
+        dlkd::List<uint32_t>::Iterator it = list.begin();
+        CHECK(it->GetValue() == 1);
+        it++;
+        CHECK(it->GetValue() == 2);
+        it++;
+        CHECK(it->GetValue() == 20);
+        it++;
+        CHECK(it->GetValue() == 3);
+        it++;
+        CHECK(it->GetValue() == 4);
+    }
+
+    SUBCASE("Insert in the end")
+    {
+        REQUIRE(list.Size() == 4);
+
+        list.Insert(31, 4);
+
+        REQUIRE(list.Size() == 5);
+        REQUIRE(list.Front() == 1);
+        REQUIRE(list.Back() == 31);
+
+        dlkd::List<uint32_t>::Iterator it = list.begin();
+        CHECK(it->GetValue() == 1);
+        it++;
+        CHECK(it->GetValue() == 2);
+        it++;
+        CHECK(it->GetValue() == 3);
+        it++;
+        CHECK(it->GetValue() == 4);
+        it++;
+        CHECK(it->GetValue() == 31);
+    }
+}

@@ -1,15 +1,14 @@
 * DATA_STRUCTURES
-This repository contains some data structures implemented by @luk3rr
+This repository contains some data structures implemented by @luk3rr.
 
-* Implemented Data Structures
-
-- [[include/binary_heap.h][Binary Heap]]
-- [[include/circular_queue.h][Circular Queue]]
-- [[include/map.h][Map]]
-- [[include/pair.h][Pair]]
-- [[include/priority_queue.h][Priority Queue]]
-- [[include/queue.h][Queue]]
-- [[include/red_black_tree.h][Red Black Tree]]
-- [[include/stack.h][Stack]]
-- [[include/tuple.h][Tuple]]
-- [[include/vector.h][Vector]]
+Implemented data structures:
++ Binary heap
++ Queue
++ List
++ Map
++ Pair
++ Priority Queue
++ Red-Black Tree
++ Stack
++ Tuple
++ Vector

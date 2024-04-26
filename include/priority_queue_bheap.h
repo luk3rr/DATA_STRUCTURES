@@ -13,7 +13,6 @@
 #include "binary_heap.h"
 #include "comparators.h"
 #include "queue_base.h"
-#include "vector.h"
 
 // Binary heap namespace
 namespace bheap

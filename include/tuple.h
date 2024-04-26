@@ -10,8 +10,6 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "vector.h"
-
 /**
  * @brief Construct a Tuple with elements of different types
  *

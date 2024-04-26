@@ -9,8 +9,6 @@
 
 #include <cstddef>
 
-#include "utils.h"
-
 /**
  * @brief Base class for Queue
  *

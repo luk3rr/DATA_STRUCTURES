@@ -13,7 +13,6 @@
 
 #include "comparators.h"
 #include "node_rbtree.h"
-#include "utils.h"
 
 namespace rbtree
 {

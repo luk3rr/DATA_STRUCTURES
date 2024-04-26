@@ -7,45 +7,13 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <fstream>
-#include <iostream>
-
+#include "comparators.h"
 #include "node_rbtree.h"
 #include "pair.h"
 #include "red_black_tree.h"
 
 namespace rbtree
 {
-    /**
-     * @brief Custom 'less than' comparator for the Pair class. Used only in the context
-     * of the map to manipulate elements in the red-black tree.
-     *
-     * Considers a < b if a.key < b.key.
-     *
-     * @tparam typeK The type of the value stored in the key of the Pair
-     * @tparam typeV The type of the value stored in the value of the Pair
-     */
-    template<typename typeK, typename typeV>
-    auto PairLessComparator =
-        [](const Pair<typeK, typeV>& a, const Pair<typeK, typeV>& b) {
-            return a.GetFirst() < b.GetFirst();
-        };
-
-    /**
-     * @brief Custom 'equal to' comparator for the Pair class. Used only in the context
-     * of the map to manipulate elements in the red-black tree.
-     *
-     * Considers a == b if a.key == b.key.
-     *
-     * @tparam typeK The type of the value stored in the key of the Pair
-     * @tparam typeV The type of the value stored in the value of the Pair
-     */
-    template<typename typeK, typename typeV>
-    auto PairEqualComparator =
-        [](const Pair<typeK, typeV>& a, const Pair<typeK, typeV>& b) {
-            return a.GetFirst() == b.GetFirst();
-        };
-
     /**
      * @brief A Red-Black Tree-based Map implementation
      *
@@ -69,13 +37,13 @@ namespace rbtree
      */
     template<typename typeK, typename typeV>
     class Map : private RedBlackTree<Pair<typeK, typeV>,
-                                     decltype(PairLessComparator<typeK, typeV>),
-                                     decltype(PairEqualComparator<typeK, typeV>)>
+                                     decltype(comparators::pairLess<typeK, typeV>),
+                                     decltype(comparators::pairEqual<typeK, typeV>)>
     {
         private:
             using RBTree = RedBlackTree<Pair<typeK, typeV>,
-                                        decltype(PairLessComparator<typeK, typeV>),
-                                        decltype(PairEqualComparator<typeK, typeV>)>;
+                                        decltype(comparators::pairLess<typeK, typeV>),
+                                        decltype(comparators::pairEqual<typeK, typeV>)>;
 
             using NodeType = Node<Pair<typeK, typeV>>;
 
@@ -249,8 +217,8 @@ namespace rbtree
     template<typename typeK, typename typeV>
     Map<typeK, typeV>::Map()
         : RedBlackTree<Pair<typeK, typeV>,
-                       decltype(PairLessComparator<typeK, typeV>),
-                       decltype(PairEqualComparator<typeK, typeV>)>()
+                       decltype(comparators::pairLess<typeK, typeV>),
+                       decltype(comparators::pairEqual<typeK, typeV>)>()
     { }
 
     template<typename typeK, typename typeV>

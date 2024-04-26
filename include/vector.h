@@ -83,7 +83,7 @@ class Vector
          * @param index Índice do elemento que será buscado
          * @return Elemento na posição index
          */
-        typeT& operator[](const std::size_t index);
+        typeT&       operator[](const std::size_t index);
         const typeT& operator[](const std::size_t index) const;
 
         /**
@@ -184,7 +184,7 @@ class Vector
          * @return The element at the specified index
          * @throw std::out_of_range If the index is invalid
          **/
-        typeT& At(const std::size_t index);
+        typeT&       At(const std::size_t index);
         const typeT& At(const std::size_t index) const;
 
         // Iterator
@@ -526,6 +526,5 @@ const typeT& Vector<typeT>::At(std::size_t index) const
 
     return this->m_elements[index];
 }
-
 
 #endif // VECTOR_H_

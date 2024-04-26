@@ -7,8 +7,6 @@
 #ifndef NODE_RED_BLACK_TREE_H_
 #define NODE_RED_BLACK_TREE_H_
 
-#include "node.h"
-
 namespace rbtree
 {
     enum Color

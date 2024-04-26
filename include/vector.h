@@ -26,8 +26,6 @@
  * the elements in the vector
  *
  * @tparam typeT The type of elements stored in the vector
- *
- * TODO implement functions: insert(pos, value), erase(pos)
  */
 template<typename typeT>
 class Vector
@@ -128,9 +126,29 @@ class Vector
         void PushBack(const typeT element);
 
         /**
+         * @brief Insert a new element at the specified position
+         * @param pos Position to insert the new element
+         * @param value New element
+         */
+        void Insert(const std::size_t pos, const typeT value);
+
+        /**
          * @brief Remove the element at the end of the vector
          */
         void PopBack();
+
+        /**
+         * @brief Remove the element at the specified position
+         * @param pos Position of the element to be removed
+         */
+        void Erase(const std::size_t pos);
+
+        /**
+         * @brief Remove the elements in the range [first, last]
+         * @param first Position of the first element to be removed
+         * @param last Position of the last element to be removed
+         */
+        void Erase(const std::size_t first, const std::size_t last);
 
         /**
          * @return The element at the beginning of the vector
@@ -376,6 +394,63 @@ void Vector<typeT>::PushBack(const typeT element)
     this->m_elements[this->m_size++] = element;
 }
 
+template<typename typeT>
+void Vector<typeT>::Insert(const std::size_t pos, const typeT value)
+{
+    if (pos > this->m_size)
+        throw std::out_of_range("Index out of bounds");
+
+    if (this->m_size == this->m_capacity)
+    {
+        this->Reserve(this->m_capacity * VECTOR_GROWTH_FACTOR);
+    }
+
+    for (std::size_t i = this->m_size; i > pos; i--)
+    {
+        this->m_elements[i] = this->m_elements[i - 1];
+    }
+
+    this->m_elements[pos] = value;
+    this->m_size++;
+}
+
+template<typename typeT>
+void Vector<typeT>::PopBack()
+{
+    if (not this->IsEmpty())
+    {
+        this->m_size--;
+    }
+}
+
+template<typename typeT>
+void Vector<typeT>::Erase(const std::size_t pos)
+{
+    if (pos > this->m_size)
+        throw std::out_of_range("Index out of bounds");
+
+    for (std::size_t i = pos; i < this->m_size - 1; i++)
+    {
+        this->m_elements[i] = this->m_elements[i + 1];
+    }
+
+    this->m_size--;
+}
+
+template<typename typeT>
+void Vector<typeT>::Erase(const std::size_t first, const std::size_t last)
+{
+    if (first >= this->m_size or last >= this->m_size)
+        throw std::out_of_range("Index out of bounds");
+
+    // ... + 1 because the last element is inclusive
+    for (std::size_t i = first; i < this->m_size - (last - first + 1); i++)
+    {
+        this->m_elements[i] = this->m_elements[i + (last - first + 1)];
+    }
+
+    this->m_size -= (last - first + 1);
+}
 
 template<typename typeT>
 typeT& Vector<typeT>::Front() const
@@ -393,15 +468,6 @@ typeT& Vector<typeT>::Back() const
         throw std::overflow_error("Vector is empty");
 
     return m_elements[this->m_size - 1];
-}
-
-template<typename typeT>
-void Vector<typeT>::PopBack()
-{
-    if (not this->IsEmpty())
-    {
-        this->m_size--;
-    }
 }
 
 template<typename typeT>

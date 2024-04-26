@@ -209,3 +209,120 @@ TEST_CASE("Initialize 2D Vector with Default Values")
         CHECK(correct);
     }
 }
+
+TEST_CASE("Insert Element at Specific Position")
+{
+    Vector<int> vec({ 1, 2, 3, 4, 5 });
+
+    SUBCASE("Insert Element at the Beginning")
+    {
+        REQUIRE(vec.Size() == 5);
+        vec.Insert(0, 0);
+        REQUIRE(vec.Size() == 6);
+
+        CHECK_EQ(vec[0], 0);
+        CHECK_EQ(vec[1], 1);
+    }
+
+    SUBCASE("Insert Element at the End")
+    {
+        REQUIRE(vec.Size() == 5);
+        vec.Insert(5, 6);
+        REQUIRE(vec.Size() == 6);
+
+        CHECK_EQ(vec[4], 5);
+        CHECK_EQ(vec[5], 6);
+    }
+
+    SUBCASE("Insert Element in the Middle")
+    {
+        REQUIRE(vec.Size() == 5);
+        vec.Insert(2, 99);
+        REQUIRE(vec.Size() == 6);
+
+        CHECK_EQ(vec[1], 2);
+        CHECK_EQ(vec[2], 99);
+        CHECK_EQ(vec[3], 3);
+    }
+
+    SUBCASE("Insert Element in an Invalid Position")
+    {
+        CHECK_THROWS_AS(vec.Insert(8, 8), std::out_of_range);
+    }
+}
+
+TEST_CASE("Erasing specific elements")
+{
+    Vector<int> vec({ 1, 2, 3, 4, 5 });
+
+    SUBCASE("Erase Element at the Beginning")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(0);
+        REQUIRE_EQ(vec.Size(), 4);
+
+        CHECK_EQ(vec[0], 2);
+    }
+
+    SUBCASE("Erase Element at the End")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(4);
+        REQUIRE_EQ(vec.Size(), 4);
+
+        CHECK_EQ(vec[3], 4);
+    }
+
+    SUBCASE("Erase Element in the Middle")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(2);
+        REQUIRE_EQ(vec.Size(), 4);
+
+        CHECK_EQ(vec[2], 4);
+    }
+
+    SUBCASE("Erase Element in an Invalid Position")
+    {
+        CHECK_THROWS_AS(vec.Erase(8), std::out_of_range);
+    }
+}
+
+TEST_CASE("Erasing interval of elements")
+{
+    Vector<int> vec({ 1, 2, 3, 4, 5 });
+
+    SUBCASE("Erase Interval at the Beginning")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(0, 2);
+        REQUIRE_EQ(vec.Size(), 2);
+
+        CHECK_EQ(vec[0], 4);
+        CHECK_EQ(vec[1], 5);
+    }
+
+    SUBCASE("Erase Interval at the End")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(2, 4);
+        REQUIRE_EQ(vec.Size(), 2);
+
+        CHECK_EQ(vec[1], 2);
+    }
+
+    SUBCASE("Erase Interval in the Middle")
+    {
+        REQUIRE_EQ(vec.Size(), 5);
+        vec.Erase(1, 3);
+        REQUIRE_EQ(vec.Size(), 2);
+
+        CHECK_EQ(vec[0], 1);
+        CHECK_EQ(vec[1], 5);
+    }
+
+    SUBCASE("Erase Interval in an Invalid Position")
+    {
+        CHECK_THROWS_AS(vec.Erase(8, 10), std::out_of_range);
+    }
+}

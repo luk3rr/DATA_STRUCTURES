@@ -4,10 +4,7 @@
  * Author: Lucas Araújo <araujolucas@dcc.ufmg.br>
  */
 
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <random>
+#include <cstdint>
 #include <stdexcept>
 
 #include "doctest.h"

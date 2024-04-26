@@ -6,11 +6,7 @@
 
 #include "doctest.h"
 
-#include <random>
-#include <set>
-
 #include "red_black_tree.h"
-#include "vector.h"
 
 TEST_CASE("Inserção")
 {

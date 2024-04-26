@@ -37,13 +37,13 @@ namespace rbtree
      */
     template<typename typeK, typename typeV>
     class Map : private RedBlackTree<Pair<typeK, typeV>,
-                                     decltype(comparators::pairLess<typeK, typeV>),
-                                     decltype(comparators::pairEqual<typeK, typeV>)>
+                                     decltype(comparators::PairLess<typeK, typeV>),
+                                     decltype(comparators::PairEqual<typeK, typeV>)>
     {
         private:
             using RBTree = RedBlackTree<Pair<typeK, typeV>,
-                                        decltype(comparators::pairLess<typeK, typeV>),
-                                        decltype(comparators::pairEqual<typeK, typeV>)>;
+                                        decltype(comparators::PairLess<typeK, typeV>),
+                                        decltype(comparators::PairEqual<typeK, typeV>)>;
 
             using NodeType = Node<Pair<typeK, typeV>>;
 
@@ -217,8 +217,8 @@ namespace rbtree
     template<typename typeK, typename typeV>
     Map<typeK, typeV>::Map()
         : RedBlackTree<Pair<typeK, typeV>,
-                       decltype(comparators::pairLess<typeK, typeV>),
-                       decltype(comparators::pairEqual<typeK, typeV>)>()
+                       decltype(comparators::PairLess<typeK, typeV>),
+                       decltype(comparators::PairEqual<typeK, typeV>)>()
     { }
 
     template<typename typeK, typename typeV>

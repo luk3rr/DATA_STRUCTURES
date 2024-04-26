@@ -13,9 +13,9 @@
 #include <stdexcept>
 
 #include "binary_tree_excpt.h"
+#include "comparators.h"
 #include "node.h"
 #include "queue_slkd.h"
-#include "utils.h"
 
 /**
  * @brief A binary tree data structure
@@ -430,8 +430,8 @@ bool BinaryTree<typeT>::IsAncestorRecursive(typeT i, typeT j)
     if (i == j)
         return false;
 
-    if (utils::Min(i, j) < this->m_root->GetValue() and
-        utils::Max(i, j) > this->_root->key)
+    if (comparators::Min<typeT>(i, j) < this->m_root->GetValue() and
+        comparators::Max<typeT>(i, j) > this->_root->key)
         return false;
 
     else if (i < this->m_root->GetValue() and j < this->_root->key)
@@ -455,7 +455,8 @@ bool BinaryTree<typeT>::IsAncestorRecursive(dlkd::Node<typeT>* node, typeT i, ty
     if (i == j)
         return false;
 
-    if (utils::Min(i, j) < node->GetValue() and utils::Max(i, j) > node->key)
+    if (comparators::Min<typeT>(i, j) < node->GetValue() and
+        comparators::Max<typeT>(i, j) > node->key)
         return false;
 
     else if (i < node->GetValue() and j < node->key)
@@ -509,7 +510,7 @@ bool BinaryTree<typeT>::IsAncestorLevelOrder(typeT i, typeT j)
         {
             return false;
         }
-        if (utils::Min(i, j) < root_aux and utils::Max(i, j) > root_aux)
+        if (comparators::Min<typeT>(i, j) < root_aux and comparators::Max<typeT>(i, j) > root_aux)
         {
             return false;
         }
@@ -589,8 +590,8 @@ bool BinaryTree<typeT>::IsAncestor(typeT i, typeT j)
     // i < root < j  OU  j < root < i, implica em galhos diferentes o que é suficiente
     // para dizer que i não é ancestral de j No inorder é possível descobrir isso
     // comparando as posições relativas em relação a raiz
-    if (utils::Min(inorderPositionI, inorderPositionJ) < inorderPositionRoot and
-        utils::Max(inorderPositionI, inorderPositionJ) > inorderPositionRoot)
+    if (comparators::Min<typeT>(inorderPositionI, inorderPositionJ) < inorderPositionRoot and
+        comparators::Max<typeT>(inorderPositionI, inorderPositionJ) > inorderPositionRoot)
     {
 
         return false;
@@ -611,14 +612,10 @@ bool BinaryTree<typeT>::IsAncestor(typeT i, typeT j)
     int postorderPositionJ = this->KeyPosition(postorderArray, j);
 
     // Verifica se i ou j não foi encontrado no array
-    if (utils::Min(inorderPositionI,
-                   inorderPositionJ,
-                   preorderPositionI,
-                   preorderPositionJ,
-                   postorderPositionI,
-                   postorderPositionJ) == -1)
+    if (inorderPositionI == -1 or inorderPositionJ == -1 or
+        preorderPositionI == -1 or preorderPositionJ == -1 or
+        postorderPositionI == -1 or postorderPositionJ == -1)
     {
-
         return false;
     }
 

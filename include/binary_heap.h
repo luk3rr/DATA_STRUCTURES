@@ -36,7 +36,7 @@ namespace bheap
      * NOTE: By default, the 'Compare' parameter is set to 'comparators::less<typeT>' for a
      * minimum priority
      */
-    template<typename typeT, typename Compare = decltype(comparators::less<typeT>)>
+    template<typename typeT, typename Compare = decltype(comparators::Less<typeT>)>
     class BinaryHeap : HeapBase<typeT>
     {
         private:

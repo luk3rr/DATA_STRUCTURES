@@ -7,12 +7,10 @@
 #include "doctest.h"
 
 #include "binary_heap.h"
-#include "priority_queue_bheap.h"
-#include "utils.h"
 
 TEST_CASE("Max binary heap: Inserir/Remover elemento")
 {
-    bheap::BinaryHeap<int, decltype(comparators::greater<int>)> bheap;
+    bheap::BinaryHeap<int, decltype(comparators::Greater<int>)> bheap;
 
     SUBCASE("Caso 1: tamanho 1")
     {

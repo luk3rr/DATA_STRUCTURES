@@ -15,19 +15,19 @@ namespace comparators
      * @brief A function object to compare two values using less-than operator
      */
     template<typename typeT>
-    auto less = [](const typeT& a, const typeT& b) -> bool { return a < b; };
+    auto Less = [](const typeT& a, const typeT& b) -> bool { return a < b; };
 
     /**
      * @brief A function object to compare two values using greater-than operator
      */
     template<typename typeT>
-    auto greater = [](const typeT& a, const typeT& b) -> bool { return a > b; };
+    auto Greater = [](const typeT& a, const typeT& b) -> bool { return a > b; };
 
     /**
      * @brief A function object to compare two values for equality
      */
     template<typename typeT>
-    auto equal = [](const typeT& a, const typeT& b) -> bool { return a == b; };
+    auto Equal = [](const typeT& a, const typeT& b) -> bool { return a == b; };
 
     /**
      * @brief Custom 'less than' comparator for the Pair class. Used only in the context
@@ -39,7 +39,7 @@ namespace comparators
      * @tparam typeV The type of the value stored in the value of the Pair
      */
     template<typename typeK, typename typeV>
-    auto pairLess =
+    auto PairLess =
         [](const Pair<typeK, typeV>& a, const Pair<typeK, typeV>& b) -> bool {
         return a.GetFirst() < b.GetFirst();
     };
@@ -54,10 +54,24 @@ namespace comparators
      * @tparam typeV The type of the value stored in the value of the Pair
      */
     template<typename typeK, typename typeV>
-    auto pairEqual =
+    auto PairEqual =
         [](const Pair<typeK, typeV>& a, const Pair<typeK, typeV>& b) -> bool {
         return a.GetFirst() == b.GetFirst();
     };
+
+    /**
+     * @brief Get the maximum value between two values
+     * @tparam typeT The type of the values to be compared
+     */
+    template<typename typeT>
+    auto Max = [](const typeT& a, const typeT& b) -> typeT { return a > b ? a : b; };
+
+    /**
+     * @brief Get the minimum value between two values
+     * @tparam typeT The type of the values to be compared
+     */
+    template<typename typeT>
+    auto Min = [](const typeT& a, const typeT& b) -> typeT { return a < b ? a : b; };
 
 } // namespace comparators
 

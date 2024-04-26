@@ -11,7 +11,7 @@
 #include <initializer_list>
 #include <stdexcept>
 
-#include "utils.h"
+#include "comparators.h"
 
 // The growth factor determines how much a vector should grow when it needs to
 // be resized
@@ -374,7 +374,7 @@ bool Vector<typeT>::IsEmpty() const
 template<typename typeT>
 void Vector<typeT>::Swap(const std::size_t index1, const std::size_t index2)
 {
-    if ((std::size_t)utils::Max(index1, index2) > this->m_capacity)
+    if (comparators::Max<std::size_t>(index1, index2) > this->m_capacity)
         throw std::out_of_range("Index out of bounds");
 
     typeT aux = this->m_elements[index1];

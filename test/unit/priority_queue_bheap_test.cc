@@ -9,11 +9,10 @@
 #include "doctest.h"
 
 #include "priority_queue_bheap.h"
-#include "utils.h"
 
 TEST_CASE("Max Priority Queue: Inserir/Remover elemento")
 {
-    bheap::PriorityQueue<int, decltype(comparators::greater<int>)> pqueue;
+    bheap::PriorityQueue<int, decltype(comparators::Greater<int>)> pqueue;
 
     SUBCASE("Caso 1: Lista vazia")
     {

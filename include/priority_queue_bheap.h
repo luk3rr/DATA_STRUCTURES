@@ -32,10 +32,10 @@ namespace bheap
      * @tparam typeT The type of elements stored in the priority queue
      * @tparam Compare The custom comparator used to determine the priority of elements
      *
-     * NOTE: By default, the 'Compare' parameter is set to 'comparators::less<typeT>' for a
+     * NOTE: By default, the 'Compare' parameter is set to 'comparators::Less<typeT>' for a
      * minimum priority queue
      */
-    template<typename typeT, typename Compare = decltype(comparators::less<typeT>)>
+    template<typename typeT, typename Compare = decltype(comparators::Less<typeT>)>
     class PriorityQueue : public QueueBase<typeT>, public BinaryHeap<typeT, Compare>
     {
         private:

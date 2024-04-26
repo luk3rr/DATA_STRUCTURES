@@ -35,8 +35,8 @@ namespace rbtree
      * @tparam equalComparator The custom comparator for equal comparisons
      */
     template<typename typeT,
-             typename lessComparator  = decltype(comparators::less<typeT>),
-             typename equalComparator = decltype(comparators::equal<typeT>)>
+             typename lessComparator  = decltype(comparators::Less<typeT>),
+             typename equalComparator = decltype(comparators::Equal<typeT>)>
     class RedBlackTree
     {
         protected:
